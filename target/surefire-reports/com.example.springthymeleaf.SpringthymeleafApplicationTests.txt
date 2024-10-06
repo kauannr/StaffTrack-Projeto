@@ -1,0 +1,12 @@
+-------------------------------------------------------------------------------
+Test set: com.example.springthymeleaf.SpringthymeleafApplicationTests
+-------------------------------------------------------------------------------
+Tests run: 4, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 9.669 s <<< FAILURE! -- in com.example.springthymeleaf.SpringthymeleafApplicationTests
+com.example.springthymeleaf.SpringthymeleafApplicationTests.inserirUsuario -- Time elapsed: 0.810 s <<< ERROR!
+java.lang.IllegalArgumentException: Usuário já existe
+	at com.example.springthymeleaf.SpringthymeleafApplicationTests.criptografarSenhaESalvar(SpringthymeleafApplicationTests.java:21)
+	at com.example.springthymeleaf.SpringthymeleafApplicationTests.inserirUsuario(SpringthymeleafApplicationTests.java:41)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>StaffTrack</title>
+
+    <!-- Importações CSS -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" href="materialize/css/materialize.min.css" media="screen,projection"/>
+    <link type="text/css" rel="stylesheet" href="materialize/css/materialize.css" media="screen,projection"/>
+
+    <!-- Custom styles -->
+    <style>
+        body {
+            background-color: #2196f3;
+            color: white;
+        }
+
+        h1 {
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            font-weight: bold;
+            font-size: 2.5rem;
+            margin-top: 50px;
+            animation: floating 3s ease-in-out infinite;
+        }
+
+        .button-link {
+            display: inline-block;
+            background-color: #ffffff;
+            color: #2196f3;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            border-radius: 5px;
+            text-align: center;
+            text-decoration: none;
+            margin-top: 20px;
+        }
+
+        .button-link:hover {
+            background-color: #f1f1f1;
+        }
+
+        .button-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .cargo-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        select {
+            background-color: #ffffff;
+            color: #2196f3;
+            padding: 10px;
+            font-size: 1.2rem;
+            border-radius: 5px;
+            border: none;
+            margin-top: 20px;
+        }
+
+        @keyframes floating {
+            0% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-15px);
+            }
+            100% {
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <h1>StaffTrack</h1>
+
+    <div class="button-container">
+        <a href="#" class="button-link" id="showCargoButton">Cadastrar novo</a>
+    </div>
+
+    <form id="gerenteVendasForm" action="" method="POST" enctype="multipart/form-data">
+        <div class="cargo-container" id="cargoContainer" style="display: none;">
+            <select class="browser-default" id="cargoSelect">
+                <option value="" disabled selected>Selecione um cargo</option>
+                <option value="inicialgerente">Gerente de Vendas</option>
+                <option value="inicialvendedor">Vendedor</option>
+                <option value="/cadastro/analista_rh">Analista de RH</option>
+            </select>
+        </div>
+    </form>
+    
+    
+    <!--JavaScript at end of body for optimized loading-->
+    <script type="text/javascript" src="materialize/js/materialize.min.js"></script>
+    <script type="text/javascript" src="materialize/js/materialize.js"></script>
+
+    <script type="text/javascript">
+        document.getElementById('showCargoButton').addEventListener('click', function() {
+    console.log('Botão clicado'); // Adicione isso para verificar se o clique está sendo registrado
+    document.getElementById('cargoContainer').style.display = 'block';
+});
+
+
+        document.getElementById('cargoSelect').addEventListener('change', function() {
+            // Redireciona para a página do formulário do cargo selecionado
+            var selectedCargo = this.value;
+            if (selectedCargo) {
+                window.location.href = selectedCargo;
+            }
+        });
+    </script>
+
+</body>
+</html>

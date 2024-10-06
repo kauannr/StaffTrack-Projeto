@@ -1,0 +1,14 @@
+com\example\springthymeleaf\controllers\TelefoneController.class
+com\example\springthymeleaf\reposiories\TelefoneRepository.class
+com\example\springthymeleaf\reposiories\UsuarioRepository.class
+com\example\springthymeleaf\reposiories\PessoaRepository.class
+com\example\springthymeleaf\model\Telefone.class
+com\example\springthymeleaf\security\WebConfigSecurity.class
+com\example\springthymeleaf\controllers\AcessDaniedController.class
+com\example\springthymeleaf\service\ImplemUserDetailsService.class
+com\example\springthymeleaf\model\enums\Cargo.class
+com\example\springthymeleaf\SpringthymeleafApplication.class
+com\example\springthymeleaf\model\Pessoa.class
+com\example\springthymeleaf\controllers\PessoaController.class
+com\example\springthymeleaf\model\Usuario.class
+com\example\springthymeleaf\security\AcessDanied.class
