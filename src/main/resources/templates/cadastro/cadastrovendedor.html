@@ -433,7 +433,7 @@ table.striped th {
             </thead>
             <tr th:each="pessoa : ${listaPessoasFront.content}">
                 <td th:text="${pessoa.id}"></td>
-                <td> <a th:href="@{/telefones/{idPessoa}( idPessoa = ${pessoa.id})}" > <span th:text="${pessoa.nome}"></span></a></td>
+                <td> <a th:href="@{/infovendedor/{idPessoa}( idPessoa = ${pessoa.id})}" > <span th:text="${pessoa.nome}"></span></a></td>
                 <td th:text="${pessoa.sobrenome}"></td>
                 <td th:text="${pessoa.dataNascimento}"></td>
                 <td><a th:href="@{/atualizarvendedor/{id}(id=${pessoa.id})}" sec:authorize="hasRole('ROLE_MANAGER')" >Editar</a></td>

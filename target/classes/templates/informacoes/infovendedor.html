@@ -149,7 +149,7 @@
     <h5>Lista de telefones e outras informações:</h5>
 
     <div class="container form-container">
-        <div th:each="p : ${objGerenteVendas}">
+        <div th:each="p : ${objVendedor}">
             <div class="row">
                 <div class="input-field col s4">
                     <p>ID: <span th:text="${p.id}"></span></p>
@@ -165,7 +165,7 @@
                 </div>
                 <div class="input-field col s4">
                     <p>Sexo: <span th:text="${p.sexo}"></span></p>
-                    <p> <a class="button-link" th:href="@{/contratogerente/{idPessoa}(idPessoa=${p.id})}"><span th:text="Contrato"></span></a></p>
+                    <p> <a class="button-link" th:href="@{/contratovendedor/{idPessoa}(idPessoa=${p.id})}"><span th:text="Contrato"></span></a></p>
                 </div>
             </div>
         </div>
@@ -177,7 +177,7 @@
             <span th:text="${mensagem}"></span>
         </div>
 
-        <form th:action="@{/cadtelefonegerente/{idPessoa}(idPessoa=${objGerenteVendas.id})}" th:object="${objTelefone}" method="post"
+        <form th:action="@{/cadtelefonevendedor/{idPessoa}(idPessoa=${objVendedor.id})}" th:object="${objTelefone}" method="post"
             onsubmit="return validarTelefone() ? true : false">
             <div class="row">
                 <div class="input-field col s6">
@@ -192,7 +192,7 @@
 
                 <div class="button-container">
                     <input type="submit" value="Adicionar" class="waves-effect waves-light btn">
-                    <a class="waves-effect waves-light btn" href="/inicialgerente">Retornar</a>
+                    <a class="waves-effect waves-light btn" href="/inicialvendedor">Retornar</a>
                 </div>
             </div>
         </form>
@@ -212,7 +212,7 @@
                 <td th:text="${fone.id}"></td>
                 <td th:text="${fone.numero}"></td>
                 <td th:text="${fone.tipo}"></td>
-                <td><a th:href="@{/deltelefonegerente/{idTelefone}(idTelefone=${fone.id})}">Excluir</a></td>
+                <td><a th:href="@{/deltelefonevendedor/{idTelefone}(idTelefone=${fone.id})}">Excluir</a></td>
             </tr>
         </tbody>
     </table>

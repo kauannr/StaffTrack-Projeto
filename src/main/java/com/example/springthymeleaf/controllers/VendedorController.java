@@ -13,9 +13,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.example.springthymeleaf.model.Pessoa;
+import com.example.springthymeleaf.model.Telefone;
+import com.example.springthymeleaf.model.contrato.Beneficio;
+import com.example.springthymeleaf.model.contrato.Contrato;
 import com.example.springthymeleaf.model.vendedor.GerenteVendas;
 import com.example.springthymeleaf.model.vendedor.Vendedor;
 import com.example.springthymeleaf.service.GerenteVendasService;
+import com.example.springthymeleaf.service.TelefoneService;
 import com.example.springthymeleaf.service.VendedorService;
 
 import jakarta.validation.Valid;
@@ -28,6 +32,9 @@ public class VendedorController {
 
     @Autowired
     private GerenteVendasService gerenteVendasService;
+
+    @Autowired
+    private TelefoneService telefoneService;
 
     @RequestMapping(value = "**/inicialvendedor", method = RequestMethod.GET)
     public ModelAndView indexMethodGer(@RequestParam(defaultValue = "0") int page,
@@ -44,7 +51,6 @@ public class VendedorController {
     @RequestMapping(value = "**/vendedor", method = RequestMethod.POST, consumes = "multipart/form-data")
     public ModelAndView salvar(@Valid Vendedor vendedor, BindingResult bindingResult) {
 
-        // VALIDAÇÕES E ERROS:
         ModelAndView modelAndView = new ModelAndView("cadastro/cadastrovendedor.html");
         GerenteVendas gerente = gerenteVendasService.findById(vendedor.getGerente().getId()).get();
         vendedor.setGerente(gerente);
@@ -59,14 +65,9 @@ public class VendedorController {
         }
 
         if (bindingResult.hasErrors()) {
-            // VOLTAR PRA TELA COM OS DADOS DA PESSOA:
             modelAndView.addObject("objVendedor", vendedor);
-
-            // PRA LISTA DE PESSOAS CONTINUAR NA TELA:
-            // modelAndView.addObject("listaPessoasFront",
-            // gerenteVendasService.findAllPage(0, 2, "id"));
-
-            // modelAndView.addObject("cargos", Cargo.values());
+            modelAndView.addObject("listaPessoasFront",
+                    vendedorService.findAllPage(0, 2, "id"));
 
             List<String> listaMensagensErro = new ArrayList<>();
             for (ObjectError objectError : bindingResult.getAllErrors()) {
@@ -120,6 +121,86 @@ public class VendedorController {
         modelAndView.addObject("objVendedor", new Vendedor());
         modelAndView.addObject("msgPraIterar", "Funcionário deletado com sucesso");
 
+        return modelAndView;
+    }
+
+    // TELEFONES:
+    @RequestMapping(value = "**/cadtelefonevendedor/{idPessoa}", method = RequestMethod.POST)
+    public ModelAndView cadastrarTelefone(@PathVariable("idPessoa") Long idPessoa, @Valid Telefone telefone,
+            BindingResult bindingResult, ModelAndView modelAndView) {
+
+        modelAndView.setViewName("informacoes/infovendedor.html");
+
+        Optional<Vendedor> vendedor = vendedorService.findById(idPessoa);
+
+        if (bindingResult.hasErrors()) {
+            List<String> msgErros = new ArrayList<>();
+            for (ObjectError error : bindingResult.getAllErrors()) {
+                msgErros.add(error.getDefaultMessage());
+            }
+            modelAndView.addObject("msgPraIterar", msgErros);
+            modelAndView.addObject("listaTelefones", vendedor.get().getListaTelefones());
+            modelAndView.addObject("objVendedor", vendedor.get());
+            return modelAndView;
+        }
+
+        telefone.setPessoa(vendedor.get());
+        telefoneService.save(telefone);
+
+        vendedor.get().adicionarNaLista(telefone);
+        modelAndView.addObject("msgPraIterar", "Telefone adicionado com sucesso!");
+
+        modelAndView.addObject("listaTelefones", vendedor.get().getListaTelefones());
+        modelAndView.addObject("objVendedor", vendedor.get());
+
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "**/deltelefonevendedor/{idTelefone}", method = RequestMethod.GET)
+    public ModelAndView deletarTelefone(@PathVariable("idTelefone") Long idTelefone) {
+
+        ModelAndView modelAndView = new ModelAndView("informacoes/infovendedor.html");
+
+        Optional<Telefone> telefone = telefoneService.findById(idTelefone);
+        telefoneService.delete(telefone.get());
+
+        // DADOS DA PESSOA NA TELA:
+        modelAndView.addObject("objVendedor", telefone.get().getPessoa());
+
+        // MOSTRAR LISTA DE TELEFONES
+        modelAndView.addObject("listaTelefones", telefone.get().getPessoa().getListaTelefones());
+        modelAndView.addObject("msgPraIterar", "Telefone excluído com sucesso!");
+
+        return modelAndView;
+    }
+    //
+
+    @RequestMapping(value = "**/infovendedor/{idPessoa}", method = RequestMethod.GET)
+    public ModelAndView infoGerenteVendas(@PathVariable("idPessoa") Long idPessoa, ModelAndView modelAndView) {
+
+        Optional<Vendedor> vendedor = vendedorService.findById(idPessoa);
+
+        modelAndView.setViewName("informacoes/infovendedor.html");
+
+        // DADOS DA PESSOA NA TELA:
+        modelAndView.addObject("objVendedor", vendedor.get());
+        modelAndView.addObject("objTelefone", new Telefone());
+        modelAndView.addObject("objContrato", new Contrato());
+
+        // PRA MOSTRAR A LISTA DE TELEFONES:
+        modelAndView.addObject("listaTelefones", vendedor.get().getListaTelefones());
+
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "**/contratovendedor/{idPessoa}", method = RequestMethod.GET)
+    public ModelAndView exibirContrato(@PathVariable("idPessoa") Long idPessoa, ModelAndView modelAndView) {
+
+        modelAndView.setViewName("contrato/contratovendedor.html");
+        Optional<Vendedor> vendedor = vendedorService.findById(idPessoa);
+
+        modelAndView.addObject("objContrato", vendedor.get().getContrato());
+        modelAndView.addObject("objBeneficio", new Beneficio());
         return modelAndView;
     }
 

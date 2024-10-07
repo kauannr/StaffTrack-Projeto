@@ -201,11 +201,10 @@
     <table class="striped">
         <thead>
             <tr>
-                <th>ID</th>
-                <th>Número</th>
-                <th>Tipo</th>
-                <th>Excluir</th>
-                <th>Editar</th>
+                <th style="width: 10%;">ID</th>
+                <th style="width: 15%;">Número</th>
+                <th style="width: 15%;">Tipo</th>
+                <th style="width: 15%;">Excluir</th>
             </tr>
         </thead>
         <tbody>
@@ -214,7 +213,6 @@
                 <td th:text="${fone.numero}"></td>
                 <td th:text="${fone.tipo}"></td>
                 <td><a th:href="@{/deltelefonegerente/{idTelefone}(idTelefone=${fone.id})}">Excluir</a></td>
-                <td><a th:href="@{/uptelefonegerente/{idTelefone}(idTelefone=${fone.id})}">Editar</a></td>
             </tr>
         </tbody>
     </table>

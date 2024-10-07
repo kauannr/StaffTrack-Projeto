@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.springthymeleaf.model.Pessoa;
 import com.example.springthymeleaf.model.Telefone;
@@ -201,11 +202,13 @@ public class GerenteVendasController {
 
         modelAndView.addObject("objContrato", gerente.get().getContrato());
         modelAndView.addObject("objBeneficio", new Beneficio());
+        modelAndView.addObject("objGerenteVendas", gerente.get());
         return modelAndView;
     }
 
-    @RequestMapping(value = "**/salvarcontratogerente", method = RequestMethod.POST)
-    public ModelAndView cadastrarContrato(@Valid Contrato contrato, BindingResult bindingResult,
+    @RequestMapping(value = "**/salvarcontratogerente/{idPessoa}", method = RequestMethod.POST)
+    public ModelAndView cadastrarContrato(@PathVariable("idPessoa") long idPessoa, @Valid Contrato contrato,
+            BindingResult bindingResult,
             ModelAndView modelAndView) {
 
         modelAndView.setViewName("contrato/contratogerentevendas.html");
@@ -220,22 +223,39 @@ public class GerenteVendasController {
             return modelAndView;
         }
 
-        contratoService.save(contrato);
-        modelAndView.addObject("msgPraIterar", "Contrato salvo com sucesso!");
+        Optional<GerenteVendas> gerente = gerenteVendasService.findById(idPessoa);
 
-        modelAndView.addObject("objContrato", contrato);
+        gerente.get().getContrato().setBeneficios(contrato.getBeneficios());
+        gerente.get().getContrato().setDataFim(contrato.getDataFim());
+        gerente.get().getContrato().setDataInicio(contrato.getDataInicio());
+        gerente.get().getContrato().setNumeroContrato(contrato.getNumeroContrato());
+        gerente.get().getContrato().setTipo(contrato.getTipo());
+        gerente.get().getContrato().setValor(contrato.getValor());
+
+        gerenteVendasService.save(gerente.get());
+
+        // contratoService.save(contrato);
+        modelAndView.addObject("msgPraIterar", "Contrato salvo com sucesso!");
+        modelAndView.addObject("objBeneficio", new Beneficio());
+        modelAndView.addObject("objContrato", gerente.get().getContrato());
+        modelAndView.addObject("objGerenteVendas", gerente.get());
+
+
         return modelAndView;
     }
 
-    @RequestMapping(value = "**/updcontratogerente/{idContrato}", method = RequestMethod.GET)
-    public ModelAndView atualizarContrato(@PathVariable("idContrato") Long idContrato, ModelAndView modelAndView) {
+    @RequestMapping(value = "**/updcontratogerente/{idPessoa}", method = RequestMethod.GET)
+    public ModelAndView atualizarContrato(@PathVariable("idPessoa") Long idPessoa, ModelAndView modelAndView) {
 
         modelAndView.setViewName("contrato/contratogerentevendas.html");
 
-        Optional<Contrato> contrato = contratoService.findById(idContrato);
+        Optional<GerenteVendas> gerente = gerenteVendasService.findById(idPessoa);
 
-        modelAndView.addObject("objContrato", contrato.get());
+        Contrato contrato = gerente.get().getContrato();
+
+        modelAndView.addObject("objContrato", contrato);
         modelAndView.addObject("objBeneficio", new Beneficio());
+        modelAndView.addObject("objGerenteVendas", gerente.get());
 
         // Adiciona um indicador para exibir o formulário de edição
         modelAndView.addObject("editMode", true);
@@ -243,22 +263,25 @@ public class GerenteVendasController {
         return modelAndView;
     }
 
-    @RequestMapping(value = "exibirbeneficiosgerente/{idContrato}", method = RequestMethod.GET)
-    public ModelAndView exibirBeneficios(@PathVariable("idContrato") long id, ModelAndView modelAndView) {
+    @RequestMapping(value = "**/exibirbeneficiosgerente/{idPessoa}", method = RequestMethod.GET)
+    public ModelAndView exibirBeneficios(@PathVariable("idPessoa") long idPessoa, ModelAndView modelAndView) {
 
         modelAndView.setViewName("contrato/contratogerentevendas.html");
 
-        Optional<Contrato> contrato = contratoService.findById(id);
-        List<Beneficio> beneficios = contrato.get().getBeneficios();
+        Optional<GerenteVendas> gerente = gerenteVendasService.findById(idPessoa);
+
+        List<Beneficio> beneficios = gerente.get().getContrato().getBeneficios();
         if (beneficios.isEmpty()) {
             modelAndView.addObject("msgPraIterar", "Sem benefícios cadastrados");
-            modelAndView.addObject("objContrato", contrato.get());
+            modelAndView.addObject("objContrato", gerente.get().getContrato());
             modelAndView.addObject("objBeneficio", new Beneficio());
+            modelAndView.addObject("objGerenteVendas", gerente.get());
             return modelAndView;
         }
 
-        modelAndView.addObject("objContrato", contrato.get());
+        modelAndView.addObject("objContrato", gerente.get().getContrato());
         modelAndView.addObject("objBeneficio", new Beneficio());
+        modelAndView.addObject("objGerenteVendas", gerente.get());
         modelAndView.addObject("beneficios", beneficios);
 
         return modelAndView;
@@ -266,9 +289,7 @@ public class GerenteVendasController {
 
     @RequestMapping(value = "**/salvarbeneficiogerente/{idContrato}", method = RequestMethod.POST)
     public ModelAndView cadastrarBenefício(@PathVariable("idContrato") long idContrato, @Valid Beneficio beneficio,
-            BindingResult bindingResult, ModelAndView modelAndView) {
-
-        modelAndView.setViewName("contrato/contratogerentevendas.html");
+            BindingResult bindingResult, ModelAndView modelAndView, RedirectAttributes redirectAttributes) {
 
         if (bindingResult.hasErrors()) {
             List<String> msgErro = new ArrayList<>();
@@ -277,7 +298,7 @@ public class GerenteVendasController {
             }
             modelAndView.addObject("msgPraIterar", msgErro);
             modelAndView.addObject("objBeneficio", beneficio);
-            // ver se precisa do objContrato
+            return modelAndView;
         }
 
         Optional<Contrato> contrato = contratoService.findById(idContrato);
@@ -285,11 +306,13 @@ public class GerenteVendasController {
         contrato.get().adicionarBeneficio(beneficio);
         beneficiosService.save(beneficio);
 
-        modelAndView.addObject("msgPraIterar", "Benefício adicionado!");
-        modelAndView.addObject("objContrato", new Contrato());
-        modelAndView.addObject("objBeneficio", new Beneficio());
+        // long id = contrato.get().getId();
 
-        return modelAndView;
+        redirectAttributes.addFlashAttribute("msgPraIterar", "Benefício adicionado!");
+        redirectAttributes.addFlashAttribute("objContrato", contrato.get());
+        redirectAttributes.addFlashAttribute("objBeneficio", new Beneficio());
+
+        return new ModelAndView("redirect:/contratogerente/" + contrato.get().getId());
     }
 
 }
