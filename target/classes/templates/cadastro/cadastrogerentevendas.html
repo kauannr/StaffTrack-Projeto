@@ -135,11 +135,11 @@
             margin-top: 20px;
         }
 
+         /*Do botão de salvar:*/
         .button-container button {
             background-color: #ffffff;
             color: #2196f3;
             border: none;
-            padding: 10px 20px;
             font-size: 1.5rem;
             cursor: pointer;
             border-radius: 5px;
@@ -149,15 +149,27 @@
             background-color: #f1f1f1;
         }
 
+        /*Botão listar e buscar*/
+        .btn, .btn-large, .btn-small {
+    text-decoration: none;
+    color: #fff;
+    background-color: #84b6c9;
+    text-align: center;
+    letter-spacing: .5px;
+    -webkit-transition: background-color .2s ease-out;
+    transition: background-color .2s ease-out;
+    cursor: pointer;
+}
+
 
         /* Estilo para o campo de pesquisa */
-.search-fieldset {
+    .search-fieldset {
     background-color: white;
     padding: 20px;
     border-radius: 10px;
     color: #2196f3;
     border: 1px solid #2196f3;
-}
+    }
 
 .search-fieldset legend {
     font-size: 1.5rem;
@@ -256,6 +268,7 @@ table.striped th {
         background-color: #2196f3; /* Cor de fundo para o link ativo */
         color: white; /* Cor do texto para o link ativo */
     }
+    
 
         
     </style>
@@ -369,11 +382,38 @@ table.striped th {
                 </div>
             </div>
 
+            <!-- Campos do contrato -->
+            <div class="input-field col s6">
+                <label for="contrato.numeroContrato" class="active">Número do Contrato</label>
+                <input placeholder="Informe o número do contrato" name="contrato.numeroContrato" th:field="*{contrato.numeroContrato}" class="validate">
+            </div>
+
+            <div class="input-field col s6">
+                <label for="contrato.tipo" class="active">Tipo de Contrato</label>
+                <input placeholder="Informe o tipo de contrato" name="contrato.tipo" th:field="*{contrato.tipo}" class="validate">
+            </div>
+
+            <div class="input-field col s6">
+                <label for="contrato.valor" class="active">Valor do Contrato</label>
+                <input placeholder="Informe o valor do contrato" name="contrato.valor" th:field="*{contrato.valor}" class="validate">
+            </div>
+
+            <div class="input-field col s6">
+                <label for="contrato.dataInicio" class="active">Data de Início</label>
+                <input type="date" name="contrato.dataInicio" th:field="*{contrato.dataInicio}" class="validate">
+            </div>
+
+            <div class="input-field col s6">
+                <label for="contrato.dataFim" class="active">Data de Fim</label>
+                <input type="date" name="contrato.dataFim" th:field="*{contrato.dataFim}" class="validate">
+            </div>
+
             <div class="button-container">
                 <button type="submit" class="waves-effect waves-light btn">
                     <i class="material-icons left">save</i>Salvar
                 </button>
             </div>
+
         </form>
     </div>
         <br />
@@ -393,12 +433,9 @@ table.striped th {
                         <input placeholder="Id da pessoa" type="number" input name="idade" id="idadePesquisa"
                         class="validade" th:value="${idadePesquisa}">
                         </fieldset></br>
-
+                        
                         <input class="waves-effect waves-light btn"
                             type="submit" value="Buscar">
-
-                        <a class="waves-effect waves-light btn"
-                            href="/listartodos">Listar Pessoas</a>
                     </div>
                 </div>
             </form>
@@ -417,7 +454,7 @@ table.striped th {
             </thead>
             <tr th:each="pessoa : ${listaPessoasFront.content}">
                 <td th:text="${pessoa.id}"></td>
-                <td> <a th:href="@{/telefones/{idPessoa}( idPessoa = ${pessoa.id})}" > <span th:text="${pessoa.nome}"></span></a></td>
+                <td> <a th:href="@{/infogerentevendas/{idPessoa}( idPessoa = ${pessoa.id})}" > <span th:text="${pessoa.nome}"></span></a></td>
                 <td th:text="${pessoa.sobrenome}"></td>
                 <td th:text="${pessoa.dataNascimento}"></td>
                 <td><a th:href="@{/atualizargerentevendas/{id}(id=${pessoa.id})}" sec:authorize="hasRole('ROLE_MANAGER')" >Editar</a></td>

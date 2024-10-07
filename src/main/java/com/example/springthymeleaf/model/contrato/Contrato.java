@@ -1,14 +1,22 @@
-package com.example.springthymeleaf.model;
+package com.example.springthymeleaf.model.contrato;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.example.springthymeleaf.model.Pessoa;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 public class Contrato {
@@ -23,14 +31,20 @@ public class Contrato {
 
     private String valor;
     
+    @NotNull(message = "Data de inicio do contrato é obrigatória")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Temporal(TemporalType.DATE)
     private Date dataInicio;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Temporal(TemporalType.DATE)
     private Date dataFim;
 
     @OneToOne(mappedBy = "contrato")
     private Pessoa pessoa;
+
+    @OneToMany(mappedBy = "contrato")
+    List<Beneficio> beneficios = new ArrayList<>();
 
     public Contrato(String numeroContrato, String tipo, String valor, Date dataInicio, Date dataFim, Pessoa pessoa) {
         this.numeroContrato = numeroContrato;
@@ -98,6 +112,18 @@ public class Contrato {
 
     public void setPessoa(Pessoa pessoa) {
         this.pessoa = pessoa;
+    }
+
+    public List<Beneficio> getBeneficios() {
+        return beneficios;
+    }
+
+    public void setBeneficios(List<Beneficio> beneficios) {
+        this.beneficios = beneficios;
+    }
+
+    public void adicionarBeneficio(Beneficio beneficio){
+        this.beneficios.add(beneficio);
     }
 
 
