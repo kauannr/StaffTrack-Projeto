@@ -385,6 +385,34 @@ table.striped th {
                 </div>
             </div>
 
+            
+            <!-- Campos do contrato -->
+            <div class="input-field col s6">
+                <label for="contrato.numeroContrato" class="active">Número do Contrato</label>
+                <input placeholder="Informe o número do contrato" name="contrato.numeroContrato" th:field="*{contrato.numeroContrato}" class="validate">
+            </div>
+
+            <div class="input-field col s6">
+                <label for="contrato.tipo" class="active">Tipo de Contrato</label>
+                <input placeholder="Informe o tipo de contrato" name="contrato.tipo" th:field="*{contrato.tipo}" class="validate">
+            </div>
+
+            <div class="input-field col s6">
+                <label for="contrato.valor" class="active">Valor do Contrato</label>
+                <input placeholder="Informe o valor do contrato" name="contrato.valor" th:field="*{contrato.valor}" class="validate">
+            </div>
+
+            <div class="input-field col s6">
+                <label for="contrato.dataInicio" class="active">Data de Início</label>
+                <input type="date" name="contrato.dataInicio" th:field="*{contrato.dataInicio}" class="validate">
+            </div>
+
+            <div class="input-field col s6">
+                <label for="contrato.dataFim" class="active">Data de Fim</label>
+                <input type="date" name="contrato.dataFim" th:field="*{contrato.dataFim}" class="validate">
+            </div>
+
+
             <div class="button-container">
                 <button type="submit" class="waves-effect waves-light btn">
                     <i class="material-icons left">save</i>Salvar

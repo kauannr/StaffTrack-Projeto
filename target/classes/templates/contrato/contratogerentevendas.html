@@ -208,7 +208,7 @@
 
         <!-- Formulário de cadastro de benefício (inicialmente oculto) -->
         <div class="container form-container" id="beneficioForm" style="display:none;">
-            <form th:action="@{/salvarbeneficiogerente/{idContrato}(idContrato=${objContrato.id})}" method="post" th:object="${objBeneficio}">
+            <form th:action="@{|/salvarbeneficiogerente/${objGerenteVendas.id}|}" method="post" th:object="${objBeneficio}">
                 <div class="row">
                     <div class="input-field col s6">
                         <label for="tipoBeneficio" class="active">Tipo de Benefício *</label>

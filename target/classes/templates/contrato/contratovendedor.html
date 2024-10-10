@@ -126,8 +126,8 @@
             </div>
 
             <div class="button-container">
-                <a class="waves-effect waves-light btn edit-btn" th:href="@{/updcontratogerente/{idContrato}(idContrato=${objContrato.id})}">Editar Contrato</a>
-                <a class="waves-effect waves-light btn" th:href="@{/exibirbeneficiosgerente/{idContrato}(idContrato=${objContrato.id})}">Exibir benefícios</a>
+                <a class="waves-effect waves-light btn edit-btn" th:href="@{/updcontratovendedor/{idPessoa}(idPessoa=${objVendedor.id})}">Editar Contrato</a>
+                <a class="waves-effect waves-light btn" th:href="@{/exibirbeneficiosvendedor/{idPessoa}(idPessoa=${objVendedor.id})}">Exibir benefícios</a>
                 <a class="waves-effect waves-light btn" id="cadastrarBeneficioBtn">Cadastrar benefícios</a>
             </div>
         </div>
@@ -140,7 +140,7 @@
 
     <div class="container">
         <div th:if="${editMode}" id="editContractForm">
-            <form action="//salvarcontratogerente/{idPessoa}(idPessoa=${objGerenteVendas})" method="post" th:object="${objContrato}">
+            <form action="/salvarcontratovendedor/{idPessoa}(idPessoa=${objVendedor})" method="post" th:object="${objContrato}">
                 <div class="row">
                     <div class="input-field col s6">
                         <label for="numeroContrato" class="active">Número do Contrato</label>
@@ -206,7 +206,7 @@
 
         <!-- Formulário de cadastro de benefício (inicialmente oculto) -->
         <div class="container form-container" id="beneficioForm" style="display:none;">
-            <form th:action="@{/salvarbeneficiogerente/{idContrato}(idContrato=${objContrato.id})}" method="post" th:object="${objBeneficio}">
+            <form th:action="@{/salvarbeneficiovendedor/{idPessoa}(idPessoa=${objVendedor.id})}" method="post" th:object="${objBeneficio}">
                 <div class="row">
                     <div class="input-field col s6">
                         <label for="tipoBeneficio" class="active">Tipo de Benefício *</label>

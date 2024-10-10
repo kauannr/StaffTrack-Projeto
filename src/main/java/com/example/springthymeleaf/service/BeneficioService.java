@@ -9,7 +9,7 @@ import com.example.springthymeleaf.model.contrato.Beneficio;
 import com.example.springthymeleaf.reposiories.BeneficioRepository;
 
 @Service
-public class BeneficiosService {
+public class BeneficioService {
 
     @Autowired
     private BeneficioRepository beneficioRepository;
@@ -18,7 +18,7 @@ public class BeneficiosService {
         return beneficioRepository.save(beneficio);
     }
 
-    public Optional<Beneficio> findById(long id){
+    public Optional<Beneficio> findById(long id) {
         return beneficioRepository.findById(id);
     }
 }

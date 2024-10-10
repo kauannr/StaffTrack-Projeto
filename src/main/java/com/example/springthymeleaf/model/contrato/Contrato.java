@@ -8,6 +8,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import com.example.springthymeleaf.model.Pessoa;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -43,7 +44,7 @@ public class Contrato {
     @OneToOne(mappedBy = "contrato")
     private Pessoa pessoa;
 
-    @OneToMany(mappedBy = "contrato")
+    @OneToMany(mappedBy = "contrato", cascade = CascadeType.ALL, orphanRemoval = true)
     List<Beneficio> beneficios = new ArrayList<>();
 
     public Contrato(String numeroContrato, String tipo, String valor, Date dataInicio, Date dataFim, Pessoa pessoa) {
@@ -123,8 +124,15 @@ public class Contrato {
     }
 
     public void adicionarBeneficio(Beneficio beneficio){
+        beneficio.setContrato(this);
         this.beneficios.add(beneficio);
     }
+
+    public void removerBeneficio(Beneficio beneficio){
+        this.beneficios.remove(beneficio);
+    }
+
+    
 
 
 }

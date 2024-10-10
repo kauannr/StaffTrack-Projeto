@@ -29,6 +29,7 @@ public class Beneficio implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "contrato_id")
+    @NotNull(message = "Benefício deve pertencer ao contrato")
     private Contrato contrato;
 
     public Long getId() {
