@@ -231,7 +231,6 @@ public class GerenteVendasController {
 
         Optional<GerenteVendas> gerente = gerenteVendasService.findById(idPessoa);
 
-        gerente.get().getContrato().setBeneficios(contrato.getBeneficios());
         gerente.get().getContrato().setDataFim(contrato.getDataFim());
         gerente.get().getContrato().setDataInicio(contrato.getDataInicio());
         gerente.get().getContrato().setNumeroContrato(contrato.getNumeroContrato());
@@ -301,7 +300,7 @@ public class GerenteVendasController {
         contrato.adicionarBeneficio(beneficio);
 
         Set<ConstraintViolation<Beneficio>> violacoes = validator.validate(beneficio);
-        //contrato.removerBeneficio(beneficioService.findById(5).get());
+        // contrato.removerBeneficio(beneficioService.findById(5).get());
 
         if (!violacoes.isEmpty()) {
             List<String> msgErro = new ArrayList<>();

@@ -37,6 +37,10 @@ public class Vendedor extends Pessoa {
 
     }
 
+    public void adicionarVenda(Vendas venda){
+        this.vendas.add(venda);
+    }
+
     public List<Vendas> vendasNoPeriodo(Date de, Date ate) {
 
         if (this.vendas == null || this.vendas.isEmpty()) {

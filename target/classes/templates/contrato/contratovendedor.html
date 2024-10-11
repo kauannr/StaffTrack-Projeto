@@ -140,7 +140,7 @@
 
     <div class="container">
         <div th:if="${editMode}" id="editContractForm">
-            <form action="/salvarcontratovendedor/{idPessoa}(idPessoa=${objVendedor})" method="post" th:object="${objContrato}">
+            <form th:action="@{/salvarcontratovendedor/{idPessoa}(idPessoa=${objVendedor.id})}" method="post" th:object="${objContrato}">
                 <div class="row">
                     <div class="input-field col s6">
                         <label for="numeroContrato" class="active">Número do Contrato</label>

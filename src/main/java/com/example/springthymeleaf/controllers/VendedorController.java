@@ -18,10 +18,12 @@ import com.example.springthymeleaf.model.Telefone;
 import com.example.springthymeleaf.model.contrato.Beneficio;
 import com.example.springthymeleaf.model.contrato.Contrato;
 import com.example.springthymeleaf.model.vendedor.GerenteVendas;
+import com.example.springthymeleaf.model.vendedor.Vendas;
 import com.example.springthymeleaf.model.vendedor.Vendedor;
 import com.example.springthymeleaf.service.BeneficioService;
 import com.example.springthymeleaf.service.GerenteVendasService;
 import com.example.springthymeleaf.service.TelefoneService;
+import com.example.springthymeleaf.service.VendasService;
 import com.example.springthymeleaf.service.VendedorService;
 
 import jakarta.validation.ConstraintViolation;
@@ -45,6 +47,9 @@ public class VendedorController {
 
     @Autowired
     BeneficioService beneficioService;
+
+    @Autowired
+    VendasService vendasService;
 
     @RequestMapping(value = "**/inicialvendedor", method = RequestMethod.GET)
     public ModelAndView indexMethodGer(@RequestParam(defaultValue = "0") int page,
@@ -327,5 +332,79 @@ public class VendedorController {
         return new ModelAndView("redirect:/contratovendedor/" + vendedor.get().getId());
     }
 
+    // VENDAS AQUI:
+    @RequestMapping(value = "vendas/{idPessoa}", method = RequestMethod.GET)
+    public ModelAndView vendasVendedor(@PathVariable("idPessoa") long idPessoa, ModelAndView modelAndView) {
+
+        modelAndView.setViewName("vendas/vendasvendedor.html");
+
+        Optional<Vendedor> vendedor = vendedorService.findById(idPessoa);
+        if (vendedor.get().getVendas().isEmpty()) {
+            modelAndView.addObject("msgPraIterar", "Sem vendas cadastradas");
+            modelAndView.addObject("objVenda", new Vendas());
+            modelAndView.addObject("objVendedor", vendedor.get());
+            return modelAndView;
+        }
+
+        modelAndView.addObject("listaVendas", vendedor.get().getVendas());
+        modelAndView.addObject("objVenda", new Vendas());
+        modelAndView.addObject("objVendedor", vendedor.get());
+
+        return modelAndView;
+
+    }
+
+    @RequestMapping(value = "salvarvendavendedor/{idPessoa}", method = RequestMethod.POST)
+    public ModelAndView salvarVenda(@PathVariable("idPessoa") long idPessoa, @Valid Vendas venda,
+            ModelAndView modelAndView,
+            BindingResult bindingResult) {
+
+        modelAndView.setViewName("vendas/vendasvendedor.html");
+
+        Optional<Vendedor> vendedor = vendedorService.findById(idPessoa);
+        venda.setVendedor(vendedor.get());
+
+        if (bindingResult.hasErrors()) {
+            Set<String> msgErro = new HashSet<>();
+            for (ObjectError error : bindingResult.getAllErrors()) {
+                msgErro.add(error.getDefaultMessage());
+            }
+            modelAndView.addObject("msgPraIterar", msgErro);
+            modelAndView.addObject("objVenda", new Vendas());
+            modelAndView.addObject("objVendedor", vendedor.get());
+            return modelAndView;
+        }
+
+        vendedor.get().adicionarVenda(venda);
+        vendedorService.save(vendedor.get());
+
+        modelAndView.addObject("msgPraIterar", "Venda Salva com sucesso");
+        modelAndView.addObject("listaVendas", vendedor.get().getVendas());
+        modelAndView.addObject("objVenda", new Vendas());
+        modelAndView.addObject("objVendedor", vendedor.get());
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "pesquisarvendas", method = RequestMethod.GET)
+    public ModelAndView pesquisarVendas(@RequestParam(required = false) Long idVenda,
+            @RequestParam(required = false) Double valorVenda,
+            ModelAndView modelAndView) {
+
+        modelAndView.setViewName("vendas/vendasvendedor.html");
+
+        List<Vendas> vendas = new ArrayList<>();
+
+        if (idVenda != null) {
+            vendas.add(vendasService.findById(idVenda).get());
+        } else if (valorVenda != null) {
+            vendas = vendasService.findByValorVenda(valorVenda);
+        }
+
+        modelAndView.addObject("listaVendas", vendas);
+        modelAndView.addObject("objVenda", new Vendas());
+        modelAndView.addObject("objVendedor", new Vendedor());
+
+        return modelAndView;
+    }
 
 }

@@ -2,6 +2,8 @@ package com.example.springthymeleaf.model.vendedor;
 
 import java.util.Date;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import com.example.springthymeleaf.model.caixa.OperadorCaixa;
 
 import jakarta.persistence.Entity;
@@ -12,6 +14,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 public class Vendas {
@@ -20,17 +24,25 @@ public class Vendas {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull(message = "Preencha a data da venda")
     @Temporal(TemporalType.DATE)
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date dataVenda;
 
+    @NotNull(message = "Preencha o valor da venda")
     private Double valorVenda;
 
+    @NotNull(message = "Preencha a descrição")
+    @NotEmpty(message = "Preencha a descrição")
     private String descricaoProduto;
 
+    @NotNull(message = "Preencha o valor do produto")
     private Double valorProduto;
 
+    @NotNull(message = "Preencha a quantidade do produto")
     private Integer quantidadeProduto;
 
+    @NotNull(message = "Preencha a comissão")
     private Double comissaoVenda;
 
     @ManyToOne

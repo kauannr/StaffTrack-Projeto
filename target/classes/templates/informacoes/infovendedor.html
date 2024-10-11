@@ -166,6 +166,7 @@
                 <div class="input-field col s4">
                     <p>Sexo: <span th:text="${p.sexo}"></span></p>
                     <p> <a class="button-link" th:href="@{/contratovendedor/{idPessoa}(idPessoa=${p.id})}"><span th:text="Contrato"></span></a></p>
+                    <p> <a class="button-link" th:href="@{/vendas/{idPessoa}(idPessoa=${p.id})}"><span th:text="Vendas"></span></a></p>
                 </div>
             </div>
         </div>
