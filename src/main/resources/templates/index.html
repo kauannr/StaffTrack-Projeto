@@ -24,6 +24,11 @@
             animation: floating 3s ease-in-out infinite;
         }
 
+        .logo-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+
         .button-link {
             display: inline-block;
             background-color: #ffffff;
@@ -73,11 +78,84 @@
                 transform: translateY(0);
             }
         }
+
+        body {
+            background-color: #2196f3;
+            color: white;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding-top: 50px;
+        }
+
+        .people-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .person {
+            margin: 20px;
+        }
+
+        /* Cabeça */
+        .head {
+            width: 50px;
+            height: 50px;
+            background-color: white;
+            border-radius: 50%;
+            margin: 0 auto;
+        }
+
+        /* Corpo */
+        .body {
+            width: 60px;
+            height: 80px;
+            background-color: #ffffff;
+            border-radius: 15px;
+            margin-top: 10px;
+        }
+
+        /* Checkmark */
+        .checkmark {
+            width: 0;
+            height: 0;
+            border-left: 20px solid transparent;
+            border-right: 20px solid transparent;
+            border-bottom: 40px solid gray;
+            transform: rotate(45deg);
+            position: relative;
+            top: -40px;
+            left: 35px;
+        }
+
     </style>
 </head>
 
 <body>
+
     <h1>StaffTrack</h1>
+
+    <div class="people-container">
+        <!-- Primeira pessoa -->
+        <div class="person">
+            <div class="head"></div>
+            <div class="body"></div>
+        </div>
+
+        <!-- Segunda pessoa -->
+        <div class="person">
+            <div class="head"></div>
+            <div class="body"></div>
+            <!-- Checkmark -->
+            <div class="checkmark"></div>
+        </div>
+
+        <!-- Terceira pessoa -->
+        <div class="person">
+            <div class="head"></div>
+            <div class="body"></div>
+        </div>
+    </div>
 
     <div class="button-container">
         <a href="#" class="button-link" id="showCargoButton">Cadastro e Operações</a>
@@ -101,13 +179,11 @@
 
     <script type="text/javascript">
         document.getElementById('showCargoButton').addEventListener('click', function() {
-    console.log('Botão clicado'); // Adicione isso para verificar se o clique está sendo registrado
-    document.getElementById('cargoContainer').style.display = 'block';
-});
-
+            console.log('Botão clicado');
+            document.getElementById('cargoContainer').style.display = 'block';
+        });
 
         document.getElementById('cargoSelect').addEventListener('change', function() {
-            // Redireciona para a página do formulário do cargo selecionado
             var selectedCargo = this.value;
             if (selectedCargo) {
                 window.location.href = selectedCargo;

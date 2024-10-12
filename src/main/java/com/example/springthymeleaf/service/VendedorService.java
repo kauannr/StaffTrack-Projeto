@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import com.example.springthymeleaf.model.vendedor.Vendas;
 import com.example.springthymeleaf.model.vendedor.Vendedor;
 import com.example.springthymeleaf.reposiories.VendedorRepository;
 
@@ -35,6 +36,13 @@ public class VendedorService {
 
     public void deleteById(long id){
         vendedorRepository.deleteById(id);
+    }
+
+    public Page<Vendas> getVendasPage(Vendedor vendedor, int page, int size, String SortedBy){
+
+        
+
+        return null;
     }
 
 }
