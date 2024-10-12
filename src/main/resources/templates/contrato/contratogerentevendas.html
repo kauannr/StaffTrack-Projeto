@@ -94,6 +94,14 @@
 <body>
     <h1>Informações do Contrato</h1>
 
+    <div style="text-align: left; margin-left: 20px; margin-top: -70;">
+        <p>
+            <a class="waves-effect waves-light btn" th:href="@{infogerentevendas/{idPessoa}(idPessoa=${objGerenteVendas.id})}">
+                <span th:text="Retornar"></span>
+            </a>
+        </p>
+    </div>
+
     <div class="container form-container">
         <div th:each="mensagem : ${msgPraIterar}">
             <span th:text="${mensagem}"></span>

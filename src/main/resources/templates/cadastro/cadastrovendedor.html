@@ -257,16 +257,29 @@ table.striped th {
         color: white; /* Cor do texto para o link ativo */
     }
 
-
-
-
-
-        
+    .btn, .btn-large, .btn-small {
+    text-decoration: none;
+    color: #fff;
+    background-color: #2196f3;
+    text-align: center;
+    letter-spacing: .5px;
+    -webkit-transition: background-color .2s ease-out;
+    transition: background-color .2s ease-out;
+    cursor: pointer;
+}
     </style>
 </head>
 
 <body>
     <h1>Vendedor</h1>
+    <div style="text-align: left; margin-left: 20px; margin-top: -70;">
+        <p>
+            <a class="waves-effect waves-light btn" href="http://localhost:8080/">
+                <span th:text="Retornar"></span>
+            </a>
+        </p>
+    </div>
+
 
     
     <div th:each="mensagem : ${msgPraIterar}">

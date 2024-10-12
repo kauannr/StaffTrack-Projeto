@@ -151,15 +151,15 @@
 
         /*Botão listar e buscar*/
         .btn, .btn-large, .btn-small {
-    text-decoration: none;
-    color: #fff;
-    background-color: #84b6c9;
-    text-align: center;
-    letter-spacing: .5px;
-    -webkit-transition: background-color .2s ease-out;
-    transition: background-color .2s ease-out;
-    cursor: pointer;
-}
+        text-decoration: none;
+        color: #fff;
+        background-color: #2196f3;
+        text-align: center;
+        letter-spacing: .5px;
+        -webkit-transition: background-color .2s ease-out;
+        transition: background-color .2s ease-out;
+        cursor: pointer;
+        }
 
 
         /* Estilo para o campo de pesquisa */
@@ -269,6 +269,7 @@ table.striped th {
         color: white; /* Cor do texto para o link ativo */
     }
     
+    
 
         
     </style>
@@ -276,6 +277,14 @@ table.striped th {
 
 <body>
     <h1>Gerente de vendas</h1>
+
+    <div style="text-align: left; margin-left: 20px; margin-top: -70;">
+        <p>
+            <a class="waves-effect waves-light btn custom-btn-color" href="http://localhost:8080/">
+                <span th:text="Retornar"></span>
+            </a>
+        </p>
+    </div>
 
     
     <div th:each="mensagem : ${msgPraIterar}">

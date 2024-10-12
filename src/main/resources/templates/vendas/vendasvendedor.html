@@ -118,15 +118,15 @@
 </head>
 
 <body>
-    <div style="text-align: left; margin-left: 20px; margin-top: 50px;">
+    
+    <h1>Informações de vendas</h1>
+    <div style="text-align: left; margin-left: 20px; margin-top: -70px;">
         <p>
-            <a class="waves-effect waves-light btn" th:href="@{/infovendedor/{idPessoa}(idPessoa=${objVendedor.id})}">
+            <a class="waves-effect waves-light btn" th:href="@{infovendedor/{idPessoa}(idPessoa=${objVendedor.id})}">
                 <span th:text="Retornar"></span>
             </a>
         </p>
     </div>
-    
-    <h1>Informações de vendas</h1>
 
     <div class="container form-container">
         <div th:each="mensagem : ${msgPraIterar}">

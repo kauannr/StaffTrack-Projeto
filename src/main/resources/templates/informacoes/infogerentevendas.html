@@ -130,15 +130,15 @@
 
     /*Dos botões Adicionar e Retornar*/
     .btn, .btn-large, .btn-small {
-    text-decoration: none;
-    color: #fff;
-    background-color: #4baaff;
-    text-align: center;
-    letter-spacing: .5px;
-    -webkit-transition: background-color .2s ease-out;
-    transition: background-color .2s ease-out;
-    cursor: pointer;
-}
+        text-decoration: none;
+        color: #fff;
+        background-color: #2196f3;
+        text-align: center;
+        letter-spacing: .5px;
+        -webkit-transition: background-color .2s ease-out;
+        transition: background-color .2s ease-out;
+        cursor: pointer;
+        }
 
 
     </style>
@@ -147,6 +147,13 @@
 
     <h3>Sistema de Controle</h3>
     <h5>Lista de telefones e outras informações:</h5>
+    <div style="text-align: left; margin-left: 20px; margin-top: -70;">
+        <p>
+            <a class="waves-effect waves-light btn" href="inicialgerente">
+                <span th:text="Retornar"></span>
+            </a>
+        </p>
+    </div>
 
     <div class="container form-container">
         <div th:each="p : ${objGerenteVendas}">
@@ -192,7 +199,6 @@
 
                 <div class="button-container">
                     <input type="submit" value="Adicionar" class="waves-effect waves-light btn">
-                    <a class="waves-effect waves-light btn" href="/inicialgerente">Retornar</a>
                 </div>
             </div>
         </form>
