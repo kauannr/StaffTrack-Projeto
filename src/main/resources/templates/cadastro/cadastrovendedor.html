@@ -139,7 +139,6 @@
             background-color: #ffffff;
             color: #2196f3;
             border: none;
-            padding: 10px 20px;
             font-size: 1.5rem;
             cursor: pointer;
             border-radius: 5px;
@@ -399,31 +398,40 @@ table.striped th {
             </div>
 
             
-            <!-- Campos do contrato -->
-            <div class="input-field col s6">
-                <label for="contrato.numeroContrato" class="active">Número do Contrato</label>
-                <input placeholder="Informe o número do contrato" name="contrato.numeroContrato" th:field="*{contrato.numeroContrato}" class="validate">
-            </div>
-
-            <div class="input-field col s6">
-                <label for="contrato.tipo" class="active">Tipo de Contrato</label>
-                <input placeholder="Informe o tipo de contrato" name="contrato.tipo" th:field="*{contrato.tipo}" class="validate">
-            </div>
-
-            <div class="input-field col s6">
-                <label for="contrato.valor" class="active">Valor do Contrato</label>
-                <input placeholder="Informe o valor do contrato" name="contrato.valor" th:field="*{contrato.valor}" class="validate">
-            </div>
-
-            <div class="input-field col s6">
-                <label for="contrato.dataInicio" class="active">Data de Início</label>
-                <input type="date" name="contrato.dataInicio" th:field="*{contrato.dataInicio}" class="validate">
-            </div>
-
-            <div class="input-field col s6">
-                <label for="contrato.dataFim" class="active">Data de Fim</label>
-                <input type="date" name="contrato.dataFim" th:field="*{contrato.dataFim}" class="validate">
-            </div>
+            <!-- Campos do contrato (ficam inativos em modo de atualização)-->
+             <!-- Campo oculto para o ID do Contrato -->
+            <div class="row">
+             <input type="hidden" name="contrato.id" th:field="*{contrato.id}" />
+             <div class="input-field col s6">
+                 <label for="contrato.numeroContrato" class="active">Número do Contrato</label>
+                 <input placeholder="Informe o número do contrato" name="contrato.numeroContrato" th:field="*{contrato.numeroContrato}" class="validate"
+                     th:disabled="${editMode}">
+             </div>
+ 
+             <div class="input-field col s6">
+                 <label for="contrato.tipo" class="active">Tipo de Contrato</label>
+                 <input placeholder="Informe o tipo de contrato" name="contrato.tipo" th:field="*{contrato.tipo}" class="validate"
+                     th:disabled="${editMode}">
+             </div>
+ 
+             <div class="input-field col s6">
+                 <label for="contrato.valor" class="active">Valor do Contrato</label>
+                 <input placeholder="Informe o valor do contrato" name="contrato.valor" th:field="*{contrato.valor}" class="validate"
+                     th:disabled="${editMode}">
+             </div>
+ 
+             <div class="input-field col s6">
+                 <label for="contrato.dataInicio" class="active">Data de Início</label>
+                 <input type="date" name="contrato.dataInicio" th:field="*{contrato.dataInicio}" class="validate"
+                     th:disabled="${editMode}">
+             </div>
+ 
+             <div class="input-field col s12">
+                 <label for="contrato.dataFim" class="active">Data de Fim</label>
+                 <input type="date" name="contrato.dataFim" th:field="*{contrato.dataFim}" class="validate"
+                     th:disabled="${editMode}">
+             </div>
+        </div>
 
 
             <div class="button-container">

@@ -191,16 +191,18 @@
     </div>
 </div>
 
-    <!-- Adicionando a listagem de benefícios -->
+  <!-- Adicionando a listagem de benefícios -->
         <div th:if="${beneficios != null}">
             <h5>Benefícios do Contrato</h5>
             <table class="striped">
                 <thead>
                     <tr>
                         <th style="width: 10%;">ID</th>
-                        <th style="width: 20%;">Tipo de Benefício</th>
-                        <th style="width: 50%;">Descrição</th>
-                        <th style="width: 20%;">Valor</th>
+                        <th style="width: 25%;">Tipo de Benefício</th>
+                        <th style="width: 35%;">Descrição</th>
+                        <th style="width: 10%;">Valor</th>
+                        <th style="width: 10%;">Ativo</th> <!-- Nova coluna para o atributo ativo -->
+                        <th style="width: 10%;">Atualizar status</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -209,6 +211,15 @@
                         <td th:text="${beneficio.tipoBeneficio}"></td>
                         <td th:text="${beneficio.descricao}"></td>
                         <td th:text="${beneficio.valor != null ? beneficio.valor : 'Sem valor'}"></td>
+                        <td th:text="${beneficio.ativo ? 'Sim' : 'Não'}"></td>
+                        <td>
+                            <form th:action="@{/atualizarbeneficio/{idBeneficio}(idBeneficio=${beneficio.id})}" method="post">
+                                <button type="submit" class="btn waves-effect waves-light">
+                                    <i class="material-icons left">refresh</i>
+                                    <span th:text="${beneficio.ativo ? 'Desativar' : 'Ativar'}"></span>
+                                </button>
+                            </form>
+                        </td>
                     </tr>
                 </tbody>
             </table>

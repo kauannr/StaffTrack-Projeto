@@ -134,7 +134,7 @@
         </div>
 
         <div class="row">  
-        <form th:action="@{/pesquisarvendas}" method="get"
+        <form th:action="@{/pesquisarvendas/{idPessoa}(idPessoa=${objVendedor.id})}" method="get"
             class="col s12">
             <div class="row">
                 <div class="input-field col s12">

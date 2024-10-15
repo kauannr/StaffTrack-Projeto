@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.thymeleaf.org "
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+    <title>Contrato Gerente de Vendas</title>
+
+    <!-- Adicionando Materialize CSS e JS -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+    <style>
+        body {
+            background-color: #2196f3;
+            color: white;
+            font-family: 'Arial', sans-serif;
+        }
+
+        h1 {
+            text-align: center;
+            font-weight: bold;
+            font-size: 2.5rem;
+            margin-top: 50px;
+        }
+
+        .form-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            color: #2196f3;
+            margin-top: 20px;
+        }
+
+        .input-field label {
+            color: #2196f3;
+        }
+
+        .input-field input, .input-field select {
+            border-bottom: 1px solid #2196f3;
+        }
+
+        .input-field input:focus, .input-field select:focus {
+            border-bottom: 1px solid #1e88e5;
+            box-shadow: 0 1px 0 0 #1e88e5;
+        }
+
+        .button-container {
+            margin-top: 20px;
+        }
+
+        .btn, .btn-large, .btn-small {
+        text-decoration: none;
+        color: #fff;
+        background-color: #2196f3;
+        text-align: center;
+        letter-spacing: .5px;
+        -webkit-transition: background-color .2s ease-out;
+        transition: background-color .2s ease-out;
+        cursor: pointer;
+        }
+
+        .button-container button {
+            background-color: #ffffff;
+            color: #2196f3;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .button-container button:hover {
+            background-color: #f1f1f1;
+        }
+
+        .button-container button {
+        background-color: #f7f7f7;
+        color: #2196f3;
+        border: none;
+        padding: 10px 20px;
+        font-size: 1.5rem;
+        cursor: pointer;
+        border-radius: 5px;
+        }
+
+        
+
+    </style>
+</head>
+
+<body>
+    <h1>Informações do Contrato</h1>
+
+    <div style="text-align: left; margin-left: 20px; margin-top: -70;">
+        <p>
+            <a class="waves-effect waves-light btn" th:href="@{infogerentevendas/{idPessoa}(idPessoa=${objGerenteVendas.id})}">
+                <span th:text="Retornar"></span>
+            </a>
+        </p>
+    </div>
+
+    <div class="container form-container">
+        <div th:each="mensagem : ${msgPraIterar}">
+            <span th:text="${mensagem}"></span>
+        </div>
+
+    <div class="container form-container">
+        <div th:if="${objContrato != null}">
+            <div class="row">
+                <div class="input-field col s6">
+                    <p>ID Contrato: <span th:text="${objContrato.id}"></span></p>
+                    <p>Número do Contrato: <span th:text="${objContrato.numeroContrato}"></span></p>
+                    <p>Tipo de Contrato: <span th:text="${objContrato.tipo}"></span></p>
+                </div>
+
+                <div class="input-field col s6">
+                    <p>Valor do Contrato: <span th:text="${objContrato.valor}"></span></p>
+
+                    <p>Data de Início: 
+                        <span th:if="${objContrato.dataInicio != null}" 
+                              th:text="${#dates.format(objContrato.dataInicio, 'dd/MM/yyyy')}"></span>
+                        <span th:if="${objContrato.dataInicio == null}">Não informada</span>
+                    </p>
+                    
+                    <p>Data de Fim: 
+                        <span th:if="${objContrato.dataFim != null}" 
+                              th:text="${#dates.format(objContrato.dataFim, 'dd/MM/yyyy')}"></span>
+                        <span th:if="${objContrato.dataFim == null}">Não informada</span>
+                    </p>
+                </div>
+            </div>
+
+            <div class="button-container">
+                <a class="waves-effect waves-light btn edit-btn" th:href="@{/updcontratogerente/{idPessoa}(idPessoa=${objGerenteVendas.id})}">Editar Contrato</a>
+                <a class="waves-effect waves-light btn" th:href="@{/exibirbeneficiosgerente/{idPessoa}(idPessoa=${objGerenteVendas.id})}">Exibir benefícios</a>
+                <a class="waves-effect waves-light btn" id="cadastrarBeneficioBtn">Cadastrar benefícios</a>
+            </div>
+        </div>
+
+        <div th:if="${objContrato == null}">
+            <p>Nenhum contrato foi associado a este gerente de vendas.</p>
+            <a class="waves-effect waves-light btn" href="/cadastrarContrato">Cadastrar Novo Contrato</a>
+        </div>
+    </div>
+
+    <div class="container">
+    <div th:if="${editMode}" id="editContractForm">
+        <!-- Ajustando o action para incluir o idPessoa do GerenteVendas -->
+        <form th:action="@{/salvarcontratogerente/{idPessoa}(idPessoa=${objGerenteVendas.id})}" 
+              method="post" th:object="${objContrato}">
+            <div class="row">
+                <div class="input-field col s6">
+                    <label for="numeroContrato" class="active">Número do Contrato</label>
+                    <input name="numeroContrato" th:field="*{numeroContrato}" class="validate">
+                </div>
+
+                <div class="input-field col s6">
+                    <label for="tipo" class="active">Tipo de Contrato</label>
+                    <input name="tipo" th:field="*{tipo}" class="validate">
+                </div>
+
+                <div class="input-field col s6">
+                    <label for="valor" class="active">Valor do Contrato</label>
+                    <input name="valor" th:field="*{valor}" class="validate">
+                </div>
+
+                <div class="input-field col s6">
+                    <label for="dataInicio" class="active">Data de Início</label>
+                    <input type="date" name="dataInicio" th:field="*{dataInicio}" class="validate">
+                </div>
+
+                <div class="input-field col s6">
+                    <label for="dataFim" class="active">Data de Fim</label>
+                    <input type="date" name="dataFim" th:field="*{dataFim}" class="validate">
+                </div>
+
+                <div class="button-container">
+                    <button type="submit" class="save-btn">
+                        <i class="material-icons left">save</i>Salvar
+                    </button>
+
+                    <button type="button" class="cancel-btn" id="cancelFormBtn" onclick="fecharFormulario()">
+                        <i class="material-icons left">cancel</i>Cancelar
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+   <!-- Adicionando a listagem de benefícios -->
+    <div th:if="${beneficios != null}">
+        <h5>Benefícios do Contrato</h5>
+        <table class="striped">
+            <thead>
+                <tr>
+                    <th style="width: 10%;">ID</th>
+                    <th style="width: 25%;">Tipo de Benefício</th>
+                    <th style="width: 35%;">Descrição</th>
+                    <th style="width: 20%;">Valor</th>
+                    <th style="width: 10%;">Ativo</th> <!-- Nova coluna para o atributo ativo -->
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="beneficio : ${beneficios}">
+                    <td th:text="${beneficio.id}"></td>
+                    <td th:text="${beneficio.tipoBeneficio}"></td>
+                    <td th:text="${beneficio.descricao}"></td>
+                    <td th:text="${beneficio.valor != null ? beneficio.valor : 'Sem valor'}"></td>
+                    <td th:text="${beneficio.ativo ? 'Sim' : 'Não'}"></td> <!-- Exibe "Sim" se ativo for true e "Não" se for false -->
+                    <td th:text="${atualizarbeneficio/${}}">Atualizar</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+        <!-- Formulário de cadastro de benefício (inicialmente oculto) -->
+        <div class="container form-container" id="beneficioForm" style="display:none;">
+            <form th:action="@{|/salvarbeneficiogerente/${objGerenteVendas.id}|}" method="post" th:object="${objBeneficio}">
+                <div class="row">
+                    <div class="input-field col s6">
+                        <label for="tipoBeneficio" class="active">Tipo de Benefício *</label>
+                        <input name="tipoBeneficio" th:field="*{tipoBeneficio}" class="validate" placeholder="Informe o tipo de benefício">
+                    </div>
+
+                    <div class="input-field col s6">
+                        <label for="descricao" class="active">Descrição *</label>
+                        <input name="descricao" th:field="*{descricao}" class="validate" placeholder="Informe a descrição do benefício">
+                    </div>
+
+                    <div class="input-field col s6">
+                        <label for="valor" class="active">Valor</label>
+                        <input name="valor" th:field="*{valor}" class="validate" placeholder="Informe o valor do benefício (opcional)">
+                    </div>
+
+                    <div class="button-container">
+                        <button type="submit" class="save-btn">
+                            <i class="material-icons left">save</i>Salvar
+                        </button>
+        
+                        <button type="button" class="cancel-btn" id="cancelarBeneficioBtn" >
+                            <i class="material-icons left">cancel</i>Cancelar
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Pega o botão cancelar
+            var cancelButton = document.getElementById('cancelFormBtn');
+            
+            // Adiciona um evento de clique ao botão
+            cancelButton.addEventListener('click', function() {
+                // Oculta o formulário ao clicar em cancelar
+                var formContainer = document.getElementById('editContractForm');
+                formContainer.style.display = 'none'; // Oculta somente o formulário de edição
+            });
+        });
+    </script>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Pega o botão de cadastrar benefício
+        var cadastrarBtn = document.getElementById('cadastrarBeneficioBtn');
+        var cancelarBtn = document.getElementById('cancelarBeneficioBtn');
+        var beneficioForm = document.getElementById('beneficioForm');
+
+        // Exibe o formulário de cadastro ao clicar no botão "Cadastrar Benefício"
+        cadastrarBtn.addEventListener('click', function() {
+            beneficioForm.style.display = 'block';
+        });
+
+        // Oculta o formulário ao clicar no botão "Cancelar"
+        cancelarBtn.addEventListener('click', function() {
+            beneficioForm.style.display = 'none';
+        });
+    });
+    </script>
+    
+    
+    
+</body>
+</html>
