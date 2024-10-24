@@ -1,8 +1,8 @@
 package com.example.springthymeleaf.model;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -49,7 +49,7 @@ public class Pessoa implements Serializable {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Temporal(TemporalType.DATE)
     @NotNull(message = "Insira a data de nascimento do funcionário")
-    private Date dataNascimento;
+    private LocalDate dataNascimento;
 
     //@NotNull(message = "Preencha o cargo do funcionário")
     //@NotEmpty(message = "Preencha o cargo do funcionário")
@@ -225,11 +225,11 @@ public class Pessoa implements Serializable {
         this.salario = salario;
     }
 
-    public Date getDataNascimento() {
+    public LocalDate getDataNascimento() {
         return dataNascimento;
     }
 
-    public void setDataNascimento(Date dataNascimento) {
+    public void setDataNascimento(LocalDate dataNascimento) {
         this.dataNascimento = dataNascimento;
 
     }

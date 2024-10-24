@@ -1,13 +1,14 @@
 package com.example.springthymeleaf.model.contrato;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.example.springthymeleaf.model.Pessoa;
+import com.example.springthymeleaf.model.contrato.validacao.ValidDatasContrato;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -23,6 +24,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
+@ValidDatasContrato
 public class Contrato implements Serializable{
 
     @Id
@@ -44,11 +46,11 @@ public class Contrato implements Serializable{
     @NotNull(message = "Data de inicio do contrato é obrigatória")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Temporal(TemporalType.DATE)
-    private Date dataInicio;
+    private LocalDate dataInicio;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Temporal(TemporalType.DATE)
-    private Date dataFim;
+    private LocalDate dataFim;
 
     @OneToOne(mappedBy = "contrato")
     private Pessoa pessoa;
@@ -56,7 +58,7 @@ public class Contrato implements Serializable{
     @OneToMany(mappedBy = "contrato", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     List<Beneficio> beneficios = new ArrayList<>();
 
-    public Contrato(String numeroContrato, String tipo, String valor, Date dataInicio, Date dataFim, Pessoa pessoa) {
+    public Contrato(String numeroContrato, String tipo, String valor, LocalDate dataInicio, LocalDate dataFim, Pessoa pessoa) {
         this.numeroContrato = numeroContrato;
         this.tipo = tipo;
         this.valor = valor;
@@ -100,19 +102,19 @@ public class Contrato implements Serializable{
         this.valor = valor;
     }
 
-    public Date getDataInicio() {
+    public LocalDate getDataInicio() {
         return dataInicio;
     }
 
-    public void setDataInicio(Date dataInicio) {
+    public void setDataInicio(LocalDate dataInicio) {
         this.dataInicio = dataInicio;
     }
 
-    public Date getDataFim() {
+    public LocalDate getDataFim() {
         return dataFim;
     }
 
-    public void setDataFim(Date dataFim) {
+    public void setDataFim(LocalDate dataFim) {
         this.dataFim = dataFim;
     }
 

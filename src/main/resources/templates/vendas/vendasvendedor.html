@@ -175,59 +175,60 @@
         </form>
             
 
-         <div class="button-container">
-             <a class="waves-effect waves-light btn" id="cadastrarVendaBtn">Cadastrar Venda</a>
-            </div>
+         <!-- Botão para Cadastrar Venda -->
+        <div class="button-container">
+            <a class="waves-effect waves-light btn" id="cadastrarVendaBtn">Cadastrar Venda</a>
+        </div>
         </div>
     </div>
 
 
-        <!-- Formulário de cadastro de benefício (inicialmente oculto) -->
-        <div class="container form-container" id="vendaForm" style="display:none;">
-            <form th:action="@{/salvarvendavendedor/{idPessoa}(idPessoa=${objVendedor.id})}" method="post" th:object="${objVenda}">
-                <div class="row">
-                    <div class="input-field col s6">
-                        <label for="dataVenda" class="active">Data da venda *</label>
-                        <input name="dataVenda" type="date" th:field="*{dataVenda}" class="validate" placeholder="Informe o tipo de benefício">
-                    </div>
+        <!-- Formulário de cadastro de venda (inicialmente oculto) -->
+<div class="container form-container" id="vendaForm" style="display:none;">
+    <form th:action="@{/salvarvendavendedor/{idPessoa}(idPessoa=${objVendedor.id})}" method="post" th:object="${objVenda}">
+        <div class="row">
+            <div class="input-field col s6">
+                <label for="dataVenda" class="active">Data da venda *</label>
+                <input name="dataVenda" type="date" th:field="*{dataVenda}" class="validate" placeholder="Informe a data da venda">
+            </div>
 
-                    <div class="input-field col s6">
-                        <label for="valorVenda" class="active">Valor da venda *</label>
-                        <input name="valorVenda" type="number" th:field="*{valorVenda}" class="validate" placeholder="Informe a descrição do benefício">
-                    </div>
+            <div class="input-field col s6">
+                <label for="valorVenda" class="active">Valor da venda *</label>
+                <input name="valorVenda" type="number" th:field="*{valorVenda}" class="validate" placeholder="Informe o valor da venda">
+            </div>
 
-                    <div class="input-field col s6">
-                        <label for="descricaoProduto" class="active">Descrição do produto</label>
-                        <input name="descricaoProduto" th:field="*{descricaoProduto}" class="validate" placeholder="Informe o valor do benefício (opcional)">
-                    </div>
+            <div class="input-field col s6">
+                <label for="descricaoProduto" class="active">Descrição do produto</label>
+                <input name="descricaoProduto" th:field="*{descricaoProduto}" class="validate" placeholder="Informe a descrição do produto">
+            </div>
 
-                    <div class="input-field col s6">
-                        <label for="valorProduto" class="active">Valor do produto</label>
-                        <input name="valorProduto" type="number" th:field="*{valorProduto}" class="validate" placeholder="Informe o valor do benefício (opcional)">
-                    </div>
+            <div class="input-field col s6">
+                <label for="valorProduto" class="active">Valor do produto</label>
+                <input name="valorProduto" type="number" th:field="*{valorProduto}" class="validate" placeholder="Informe o valor do produto">
+            </div>
 
-                    <div class="input-field col s6">
-                        <label for="quantidadeProduto" class="active">Quantidade</label>
-                        <input name="quantidadeProduto" type="number" th:field="*{quantidadeProduto}" class="validate" placeholder="Informe o valor do benefício (opcional)">
-                    </div>
+            <div class="input-field col s6">
+                <label for="quantidadeProduto" class="active">Quantidade</label>
+                <input name="quantidadeProduto" type="number" th:field="*{quantidadeProduto}" class="validate" placeholder="Informe a quantidade">
+            </div>
 
-                    <div class="input-field col s6">
-                        <label for="comissaoVenda" class="active">Comissão da venda</label>
-                        <input name="comissaoVenda" type="number" th:field="*{comissaoVenda}" class="validate" placeholder="(Porcentagem)">
-                    </div>
+            <div class="input-field col s6">
+                <label for="comissaoVenda" class="active">Comissão da venda</label>
+                <input name="comissaoVenda" type="number" th:field="*{comissaoVenda}" class="validate" placeholder="(Porcentagem)">
+            </div>
 
-                    <div class="button-container">
-                        <button type="submit" class="save-btn">
-                            <i class="material-icons left">save</i>Salvar
-                        </button>
-        
-                        <button type="button" class="cancel-btn" id="cancelarVendaBtn" >
-                            <i class="material-icons left">cancel</i>Cancelar
-                        </button>
-                    </div>
-                </div>
-            </form>
+            <div class="button-container">
+                <button type="submit" class="save-btn">
+                    <i class="material-icons left">save</i>Salvar
+                </button>
+
+                <button type="button" class="cancel-btn" id="cancelarVendaBtn">
+                    <i class="material-icons left">cancel</i>Cancelar
+                </button>
+            </div>
         </div>
+    </form>
+</div>
 
         <!-- Adicionando a listagem de vendas -->
         <div th:if="${listaVendas != null}">
@@ -282,32 +283,17 @@
         </span>
     </center>
     </div>
+    
 
 
-
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Pega o botão cancelar
-            var cancelButton = document.getElementById('cancelFormBtn');
-            
-            // Adiciona um evento de clique ao botão
-            cancelButton.addEventListener('click', function() {
-                // Oculta o formulário ao clicar em cancelar
-                var formContainer = document.getElementById('editContractForm');
-                formContainer.style.display = 'none'; // Oculta somente o formulário de edição
-            });
-        });
-    </script>
-
-    <script>
+    <!-- JavaScript para controlar visibilidade -->
+<script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Pega o botão de cadastrar benefício
         var cadastrarBtn = document.getElementById('cadastrarVendaBtn');
         var cancelarBtn = document.getElementById('cancelarVendaBtn');
         var vendaForm = document.getElementById('vendaForm');
 
-        // Exibe o formulário de cadastro ao clicar no botão "Cadastrar Benefício"
+        // Exibe o formulário de venda ao clicar no botão "Cadastrar Venda"
         cadastrarBtn.addEventListener('click', function() {
             vendaForm.style.display = 'block';
         });
@@ -317,9 +303,6 @@
             vendaForm.style.display = 'none';
         });
     });
-    </script>
-    
-    
-    
+</script>
 </body>
 </html>

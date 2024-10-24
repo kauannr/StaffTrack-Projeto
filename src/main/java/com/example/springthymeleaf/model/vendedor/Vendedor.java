@@ -88,4 +88,9 @@ public class Vendedor extends Pessoa {
         this.metaVendas = metaVendas;
     }
 
+    @Override
+    public String toString() {
+        return "Vendedor";
+    }
+
 }

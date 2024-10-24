@@ -1,12 +1,12 @@
 package com.example.springthymeleaf.controllers;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
@@ -66,7 +66,7 @@ public class GerenteVendasController {
 
         ModelAndView modelAndView = new ModelAndView("cadastro/cadastrogerentevendas.html");
 
-        if (gerenteVendas.getContrato().getId()!=null) {
+        if (gerenteVendas.getContrato().getId() != null) {
             Optional<Contrato> contrato = contratoService.findById(gerenteVendas.getContrato().getId());
             gerenteVendas.setContrato(contrato.get());
         }
@@ -80,8 +80,8 @@ public class GerenteVendasController {
             return modelAndView;
         }
         Set<ConstraintViolation<GerenteVendas>> violacoes = validator.validate(gerenteVendas);
-        
-        if(!violacoes.isEmpty()){
+
+        if (!violacoes.isEmpty()) {
 
             List<String> listaMensagensErro = new ArrayList<>();
             for (ConstraintViolation<GerenteVendas> violacao : violacoes) {
@@ -91,7 +91,7 @@ public class GerenteVendasController {
 
             modelAndView.addObject("listaPessoasFront",
                     gerenteVendasService.findAllPage(0, 2, "id"));
-                    modelAndView.addObject("msgPraIterar", listaMensagensErro);
+            modelAndView.addObject("msgPraIterar", listaMensagensErro);
             return modelAndView;
         }
 
@@ -136,6 +136,37 @@ public class GerenteVendasController {
 
         modelAndView.addObject("objGerenteVendas", new GerenteVendas());
         modelAndView.addObject("msgPraIterar", "Funcionário deletado com sucesso");
+
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "pesquisargerente", method = RequestMethod.GET)
+    public ModelAndView pesquisar(@RequestParam(required = false) String nomePesquisa,
+            @RequestParam(required = false) String sobrenomePesquisa, @RequestParam(required = false) Long idPesquisa,
+            @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "2") int size) {
+        ModelAndView modelAndView = new ModelAndView("cadastro/cadastrogerentevendas");
+
+        Page<GerenteVendas> pageable = null;
+        int numDeEncontrados = 0;
+
+        if (nomePesquisa != null && !nomePesquisa.isEmpty()) {
+            pageable = gerenteVendasService.findByNamePage(nomePesquisa, page, size, "id");
+            numDeEncontrados = pageable.getContent().size();
+        } else if (sobrenomePesquisa != null && !sobrenomePesquisa.isEmpty()) {
+            pageable = gerenteVendasService.findBySobrenomePage(sobrenomePesquisa, page, size, "id");
+            numDeEncontrados = pageable.getContent().size();
+        } else if (idPesquisa != null) {
+            pageable = gerenteVendasService.findByIdPage(idPesquisa, page, size, "id");
+            numDeEncontrados = pageable.getContent().size();
+        }
+        if (pageable == null || pageable.getContent().isEmpty()) {
+            pageable = gerenteVendasService.findAllPage(page, size, "id");
+        }
+
+        modelAndView.addObject("msgPraIterar", numDeEncontrados + " encontrados");
+        modelAndView.addObject("listaPessoasFront", pageable);
+        modelAndView.addObject("objGerenteVendas", new GerenteVendas());
+        modelAndView.addObject("editMode", false);
 
         return modelAndView;
     }
@@ -225,6 +256,7 @@ public class GerenteVendasController {
             ModelAndView modelAndView) {
 
         modelAndView.setViewName("contrato/contratogerentevendas.html");
+        Optional<GerenteVendas> gerente = gerenteVendasService.findById(idPessoa);
 
         if (bindingResult.hasErrors()) {
             List<String> msgErros = new ArrayList<>();
@@ -233,10 +265,10 @@ public class GerenteVendasController {
             }
             modelAndView.addObject("msgPraIterar", msgErros);
             modelAndView.addObject("objContrato", contrato);
+            modelAndView.addObject("objBeneficio", new Beneficio());
+            modelAndView.addObject("objGerenteVendas", gerente.get());
             return modelAndView;
         }
-
-        Optional<GerenteVendas> gerente = gerenteVendasService.findById(idPessoa);
 
         gerente.get().getContrato().setDataFim(contrato.getDataFim());
         gerente.get().getContrato().setDataInicio(contrato.getDataInicio());
@@ -246,7 +278,6 @@ public class GerenteVendasController {
 
         gerenteVendasService.save(gerente.get());
 
-        // contratoService.save(contrato);
         modelAndView.addObject("msgPraIterar", "Contrato salvo com sucesso!");
         modelAndView.addObject("objBeneficio", new Beneficio());
         modelAndView.addObject("objContrato", gerente.get().getContrato());
@@ -259,7 +290,6 @@ public class GerenteVendasController {
     public ModelAndView atualizarContrato(@PathVariable("idPessoa") Long idPessoa, ModelAndView modelAndView) {
 
         modelAndView.setViewName("contrato/contratogerentevendas.html");
-
         Optional<GerenteVendas> gerente = gerenteVendasService.findById(idPessoa);
 
         Contrato contrato = gerente.get().getContrato();
@@ -269,7 +299,7 @@ public class GerenteVendasController {
         modelAndView.addObject("objGerenteVendas", gerente.get());
 
         // Adiciona um indicador para exibir o formulário de edição
-        modelAndView.addObject("editMode", true);  // Ativando a flag de edição
+        modelAndView.addObject("editMode", true); // Ativando a flag de edição
 
         return modelAndView;
     }
@@ -329,8 +359,9 @@ public class GerenteVendasController {
         return new ModelAndView("redirect:/contratogerente/" + gerente.get().getId());
     }
 
-    @RequestMapping(value = "atualizarbeneficio/{idBeneficio}", method=RequestMethod.POST)
-    public ModelAndView atualizarBeneficio(@PathVariable("idBeneficio") long idBeneficio, ModelAndView modelAndView, RedirectAttributes redirectAttributes) {
+    @RequestMapping(value = "atualizarbeneficio/{idBeneficio}", method = RequestMethod.POST)
+    public ModelAndView atualizarBeneficio(@PathVariable("idBeneficio") long idBeneficio, ModelAndView modelAndView,
+            RedirectAttributes redirectAttributes) {
 
         Beneficio beneficio = beneficioService.findById(idBeneficio).get();
         beneficio.setAtivo(!beneficio.isAtivo());
@@ -339,11 +370,9 @@ public class GerenteVendasController {
 
         redirectAttributes.addFlashAttribute("msgPraIterar", "Status do benefício atualizado com sucesso!");
 
-
         modelAndView.setViewName("redirect:/exibirbeneficiosgerente/" + beneficio.getContrato().getPessoa().getId());
 
         return modelAndView;
     }
-    
 
 }

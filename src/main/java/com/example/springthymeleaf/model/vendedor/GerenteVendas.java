@@ -36,4 +36,9 @@ public class GerenteVendas extends Pessoa {
     public void setListaVendedores(List<Vendedor> listaVendedores) {
         this.listaVendedores = listaVendedores;
     }
+
+    @Override
+    public String toString() {
+        return "Gerente de vendas";
+    }
 }

@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.thymeleaf.org "
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+    <title>Entregas do Motorista</title>
+
+    <!-- Adicionando Materialize CSS e JS -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+    <style>
+        body {
+            background-color: #2196f3;
+            color: white;
+            font-family: 'Arial', sans-serif;
+        }
+
+        h1 {
+            text-align: center;
+            font-weight: bold;
+            font-size: 2.5rem;
+            margin-top: 50px;
+        }
+
+        .form-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            color: #2196f3;
+            margin-top: 20px;
+        }
+
+        .input-field label {
+            color: #2196f3;
+        }
+
+        .input-field input, .input-field select {
+            border-bottom: 1px solid #2196f3;
+        }
+
+        .input-field input:focus, .input-field select:focus {
+            border-bottom: 1px solid #1e88e5;
+            box-shadow: 0 1px 0 0 #1e88e5;
+        }
+
+        .button-container {
+            margin-top: 20px;
+        }
+
+        .btn {
+            color: #fff;
+            background-color: #2196f3;
+            text-align: center;
+            letter-spacing: .5px;
+            transition: background-color .2s ease-out;
+            cursor: pointer;
+        }
+
+        .button-container button {
+            background-color: #ffffff;
+            color: #2196f3;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .button-container button:hover {
+            background-color: #f1f1f1;
+        }
+
+    </style>
+</head>
+
+<body>
+    <h1>Entregas do Motorista</h1>
+
+    <div style="text-align: left; margin-left: 20px; margin-top: -70;">
+        <p>
+            <a class="waves-effect waves-light btn" th:href="@{infomotorista/{idPessoa}(idPessoa=${ObjMotorista})}">
+                <span th:text="Retornar"></span>
+            </a>
+        </p>
+    </div>
+
+    <!-- Formulário de cadastro de entrega (sempre visível) -->
+    <div class="container form-container" id="entregaForm">
+        
+        <div th:each="mensagem : ${msgPraIterar}">
+            <span th:text="${mensagem}"></span>
+        </div>
+
+        <form th:action="@{/salvarentregamotorista/{idPessoa}(idPessoa=${ObjMotorista})}" method="post" th:object="${objEntrega}">
+            <div class="row">
+                <!-- Campo oculto para o ID da entrega -->
+                <input type="hidden" id="entregaId" name="id" th:field="*{id}" />
+
+                <!-- Campos que ficarão imutáveis se estiver em modo de edição -->
+                <div class="input-field col s6">
+                    <label for="dataEntrega" class="active">Data da Entrega *</label>
+                    <input name="dataEntrega" type="date" th:field="*{dataEntrega}" class="validate"
+                           id="dataEntrega" th:disabled="${editMode}">
+                </div>
+
+                <div class="input-field col s6">
+                    <label for="enderecoOrigem" class="active">Origem *</label>
+                    <input name="enderecoOrigem" th:field="*{enderecoOrigem}" class="validate"
+                           id="enderecoOrigem" th:disabled="${editMode}">
+                </div>
+
+                <div class="input-field col s6">
+                    <label for="enderecoDestino" class="active">Destino *</label>
+                    <input name="enderecoDestino" th:field="*{enderecoDestino}" class="validate"
+                           id="enderecoDestino" th:disabled="${editMode}">
+                </div>
+
+                <!-- Campo mutável (status) mesmo no modo de edição -->
+                <div class="input-field col s6">
+                    <label for="statusEntrega" class="active">Status da Entrega *</label>
+                    <select name="statusEntrega" th:field="*{statusEntrega}" class="browser-default" required>
+                        <option value="" disabled selected>Selecione o status</option>
+                        <option value="Feita" th:selected="${objEntrega.statusEntrega == 'Feita'}">Feita</option>
+                        <option value="Retornada" th:selected="${objEntrega.statusEntrega == 'Retornada'}">Retornada</option>
+                        <option value="Cancelada" th:selected="${objEntrega.statusEntrega == 'Cancelada'}">Cancelada</option>
+                    </select>
+                </div>
+
+                <div class="input-field col s12">
+                    <label for="descricaoEntrega" class="active">Descrição</label>
+                    <input name="descricaoEntrega" th:field="*{descricaoEntrega}" class="validate"
+                           id="descricaoEntrega" th:disabled="${editMode}">
+                </div>
+
+                <div class="button-container">
+                    <button type="submit" class="save-btn">
+                        <i class="material-icons left">save</i>Salvar
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="container form-container">
+        <!-- Verifica se a lista de entregas é nula ou vazia -->
+        <div th:if="${listaDeEntregas == null || listaDeEntregas.size() == 0}">
+            <p>Nenhuma entrega cadastrada.</p>
+        </div>
+
+        <!-- Exibe a lista de entregas do motorista -->
+        <div th:if="${listaDeEntregas != null}">
+            <h5>Lista de Entregas</h5>
+            <table class="striped">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Data da Entrega</th>
+                        <th>Origem</th>
+                        <th>Destino</th>
+                        <th>Descrição</th>
+                        <th>Status</th>
+                        <th>Editar</th> <!-- Coluna de edição -->
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="entrega : ${listaDeEntregas}">
+                        <td th:text="${entrega.id}"></td>
+                        <td>
+                            <span th:if="${entrega.dataEntrega != null}" 
+                                  th:text="${#temporals.format(entrega.dataEntrega, 'dd/MM/yyyy')}"></span>
+                        </td>
+                        <td th:text="${entrega.enderecoOrigem}"></td>
+                        <td th:text="${entrega.enderecoDestino}"></td>
+                        <td th:text="${entrega.descricaoEntrega}"></td>
+                        <td th:text="${entrega.statusEntrega}"></td>
+                        <td> 
+                            <a th:href="@{/editarentrega/{idEntrega}(idEntrega=${entrega.id})}" 
+                               class="waves-effect waves-light btn">
+                                <i class="material-icons left">edit</i>Editar
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Script para tornar campos imutáveis ao editar -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // O botão "Editar" agora está sendo controlado pelo href que leva para o endpoint correspondente
+            // Para alterar o comportamento de edição, confie no backend ao passar os dados editáveis
+        });
+    </script>
+</body>
+</html>

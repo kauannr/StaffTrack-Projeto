@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
@@ -22,8 +23,12 @@ import com.example.springthymeleaf.model.Pessoa;
 import com.example.springthymeleaf.model.Telefone;
 import com.example.springthymeleaf.model.contrato.Beneficio;
 import com.example.springthymeleaf.model.contrato.Contrato;
+import com.example.springthymeleaf.model.motorista.CNH;
+import com.example.springthymeleaf.model.motorista.Entrega;
 import com.example.springthymeleaf.model.motorista.Motorista;
 import com.example.springthymeleaf.service.BeneficioService;
+import com.example.springthymeleaf.service.CNHService;
+import com.example.springthymeleaf.service.EntregaService;
 import com.example.springthymeleaf.service.MotoristaService;
 import com.example.springthymeleaf.service.TelefoneService;
 
@@ -46,23 +51,33 @@ public class MotoristaController {
     @Autowired
     BeneficioService beneficioService;
 
+    @Autowired
+    CNHService cnhService;
+
+    @Autowired
+    EntregaService entregaService;
+
     @RequestMapping(value = "**/inicialmotorista", method = RequestMethod.GET)
     public ModelAndView indexMethodGer(@RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "2") int size, ModelAndView modelAndView) {
 
         modelAndView.setViewName("cadastro/cadastromotorista.html");
+
         modelAndView.addObject("objMotorista", new Motorista());
         modelAndView.addObject("listaPessoasFront",
                 motoristaService.findAllPage(PageRequest.of(page, size, Sort.by("id"))));
+        modelAndView.addObject("editMode", false);
 
         return modelAndView;
     }
 
     @RequestMapping(value = "**/motorista", method = RequestMethod.POST, consumes = "multipart/form-data")
-    public ModelAndView salvar(@Valid Motorista motorista, BindingResult bindingResult, ModelAndView modelAndView) {
+    public ModelAndView salvar(Motorista motorista, ModelAndView modelAndView) {
 
         modelAndView.setViewName("cadastro/cadastromotorista.html");
-        motorista.getCnh().setMotorista(motorista);
+        CNH cnh = motorista.getCnh();
+        cnh.setMotorista(motorista);
+        cnhService.save(cnh);
 
         if (!Pessoa.validarCPF(motorista.getCpf())) {
             modelAndView.addObject("msgPraIterar", "CPF inválido");
@@ -72,17 +87,15 @@ public class MotoristaController {
             return modelAndView;
         }
 
-        if (bindingResult.hasErrors()) {
-            modelAndView.addObject("objMotorista", motorista);
-            modelAndView.addObject("listaPessoasFront",
-                    motoristaService.findAllPage(PageRequest.of(0, 2, Sort.by("id"))));
-
-            List<String> listaMensagensErro = new ArrayList<>();
-            for (ObjectError objectError : bindingResult.getAllErrors()) {
-                listaMensagensErro.add(objectError.getDefaultMessage()); // Mensagem que vem do @NotNull
+        Set<ConstraintViolation<Motorista>> violacoes = validator.validate(motorista);
+        if (!violacoes.isEmpty()) {
+            List<String> msgErro = new ArrayList<>();
+            for (ConstraintViolation<Motorista> violacao : violacoes) {
+                System.out.println("Erro de validação: " + violacao.getMessage());
+                msgErro.add(violacao.getMessage());
             }
-            modelAndView.addObject("msgPraIterar", listaMensagensErro);
-
+            modelAndView.addObject("msgPraIterar", msgErro);
+            modelAndView.addObject("objMotorista", motorista);
             return modelAndView;
         }
 
@@ -124,6 +137,37 @@ public class MotoristaController {
 
         modelAndView.addObject("objMotorista", new Motorista());
         modelAndView.addObject("msgPraIterar", "Motorista deletado com sucesso");
+
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "pesquisarmotorista", method = RequestMethod.GET)
+    public ModelAndView pesquisar(@RequestParam(required = false) String nomePesquisa,
+            @RequestParam(required = false) String sobrenomePesquisa, @RequestParam(required = false) Long idPesquisa,
+            @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "2") int size) {
+        ModelAndView modelAndView = new ModelAndView("cadastro/cadastromotorista");
+
+        Page<Motorista> pageable = null;
+        int numDeEncontrados = 0;
+
+        if (nomePesquisa != null && !nomePesquisa.isEmpty()) {
+            pageable = motoristaService.findByNamePage(nomePesquisa, page, size, "id");
+            numDeEncontrados = pageable.getContent().size();
+        } else if (sobrenomePesquisa != null && !sobrenomePesquisa.isEmpty()) {
+            pageable = motoristaService.findBySobrenomePage(sobrenomePesquisa, page, size, "id");
+            numDeEncontrados = pageable.getContent().size();
+        } else if (idPesquisa != null) {
+            pageable = motoristaService.findByIdPage(idPesquisa, page, size, "id");
+            numDeEncontrados = pageable.getContent().size();
+        }
+        if (pageable == null || pageable.getContent().isEmpty()) {
+            pageable = motoristaService.findAllPage(page, size, "id");
+        }
+
+        modelAndView.addObject("msgPraIterar", numDeEncontrados + " encontrados");
+        modelAndView.addObject("listaPessoasFront", pageable);
+        modelAndView.addObject("objMotorista", new Motorista());
+        modelAndView.addObject("editMode", false);
 
         return modelAndView;
     }
@@ -233,6 +277,7 @@ public class MotoristaController {
             ModelAndView modelAndView) {
 
         modelAndView.setViewName("contrato/contratomotorista.html");
+        Optional<Motorista> motorista = motoristaService.findById(idPessoa);
 
         if (bindingResult.hasErrors()) {
             List<String> msgErros = new ArrayList<>();
@@ -241,10 +286,11 @@ public class MotoristaController {
             }
             modelAndView.addObject("msgPraIterar", msgErros);
             modelAndView.addObject("objContrato", contrato);
+            modelAndView.addObject("objBeneficio", new Beneficio());
+            modelAndView.addObject("objMotorista", motorista.get());
+
             return modelAndView;
         }
-
-        Optional<Motorista> motorista = motoristaService.findById(idPessoa);
 
         motorista.get().getContrato().setDataFim(contrato.getDataFim());
         motorista.get().getContrato().setDataInicio(contrato.getDataInicio());
@@ -318,4 +364,99 @@ public class MotoristaController {
 
         return new ModelAndView("redirect:/contratomotorista/" + motorista.get().getId());
     }
+
+    @RequestMapping(value = "atualizarbeneficiomotorista/{idBeneficio}", method = RequestMethod.POST)
+    public ModelAndView atualizarBeneficio(@PathVariable("idBeneficio") long idBeneficio, ModelAndView modelAndView,
+            RedirectAttributes redirectAttributes) {
+
+        Beneficio beneficio = beneficioService.findById(idBeneficio).get();
+        beneficio.setAtivo(!beneficio.isAtivo());
+
+        beneficioService.save(beneficio);
+
+        redirectAttributes.addFlashAttribute("msgPraIterar", "Status do benefício atualizado com sucesso!");
+
+        modelAndView.setViewName("redirect:/exibirbeneficiosmotorista/" + beneficio.getContrato().getPessoa().getId());
+
+        return modelAndView;
+    }
+
+    // ENTREGAS:
+    @RequestMapping(value = "entregas/{idPessoa}", method = RequestMethod.GET)
+    public ModelAndView entregas(@PathVariable("idPessoa") Long idPessoa, ModelAndView modelAndView) {
+
+        modelAndView.setViewName("entrega/entregamotorista");
+
+        Optional<Motorista> motorista = motoristaService.findById(idPessoa);
+        modelAndView.addObject("objEntrega", new Entrega());
+        modelAndView.addObject("listaDeEntregas", motorista.get().getListaEntregas());
+        modelAndView.addObject("ObjMotorista", motorista.get().getId());
+        modelAndView.addObject("editMode", false);
+
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "salvarentregamotorista/{idPessoa}", method = RequestMethod.POST)
+    public ModelAndView requestMethodName(@PathVariable("idPessoa") long idPessoa, Entrega entrega,
+            ModelAndView modelAndView) {
+        modelAndView.setViewName("entrega/entregamotorista");
+
+        Optional<Motorista> motorista = motoristaService.findById(idPessoa);
+        Optional<Entrega> entrega2 = null;
+
+        Set<ConstraintViolation<Entrega>> violacoes;;
+
+        if (entregaService.isAtualizado(entrega)) {
+            entrega2 = entregaService.findById(entrega.getId());
+            entrega2.get().setStatusEntrega(entrega.getStatusEntrega());
+
+            motorista.get().getListaEntregas().add(entrega2.get());
+            entrega2.get().setMotorista(motorista.get());
+            violacoes = validator.validate(entrega2.get());
+        } else {
+
+            motorista.get().getListaEntregas().add(entrega);
+            entrega.setMotorista(motorista.get());
+           violacoes = validator.validate(entrega);
+        }
+
+        if (!violacoes.isEmpty()) {
+            List<String> msgErro = new ArrayList<>();
+            for (ConstraintViolation<Entrega> constraintViolation : violacoes) {
+                msgErro.add(constraintViolation.getMessage());
+            }
+            modelAndView.addObject("msgPraIterar", msgErro);
+            modelAndView.addObject("objEntrega", new Entrega());
+            modelAndView.addObject("listaDeEntregas", motorista.get().getListaEntregas());
+            modelAndView.addObject("ObjMotorista", motorista.get().getId());
+            modelAndView.addObject("editMode", false);
+
+            return modelAndView;
+        }
+
+        motoristaService.save(motorista.get());
+        modelAndView.addObject("msgPraIterar", "Entrega salva com sucesso!");
+        modelAndView.addObject("objEntrega", new Entrega());
+        modelAndView.addObject("listaDeEntregas", motorista.get().getListaEntregas());
+        modelAndView.addObject("ObjMotorista", motorista.get().getId());
+        modelAndView.addObject("editMode", false);
+
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "editarentrega/{idEntrega}", method = RequestMethod.GET)
+    public ModelAndView requestMethodName(@PathVariable("idEntrega") long idEntrega, ModelAndView modelAndView) {
+
+        modelAndView.setViewName("entrega/entregamotorista");
+        Optional<Entrega> entrega = entregaService.findById(idEntrega);
+        Optional<Motorista> motorista = motoristaService.findById(entrega.get().getMotorista().getId());
+
+        modelAndView.addObject("objEntrega", entrega.get());
+        modelAndView.addObject("listaDeEntregas", motorista.get().getListaEntregas());
+        modelAndView.addObject("ObjMotorista", motorista.get().getId());
+        modelAndView.addObject("editMode", true);
+
+        return modelAndView;
+    }
+
 }

@@ -52,4 +52,21 @@ public class VendasService {
         return vendasRepository.findAllByVendedorAndDataVendaBetween(vendedor, de, ate, pageable);
     }
 
+    public boolean isvendaPertenceAoVendedor(Long idVenda, Vendedor vendedor){
+
+        Optional<Vendas> venda = vendasRepository.findById(idVenda);
+        if (!venda.isPresent()) {
+            return false;
+        }
+
+        if(vendedor.getVendas().contains(venda.get())){
+            return true;
+        }
+        return false;
+    }
+
+    public List<Vendas> findByDataVenda(Date dataVenda){
+        return vendasRepository.findByDataVenda(dataVenda);
+    }
+
 }

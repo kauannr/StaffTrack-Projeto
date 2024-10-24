@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Relatórios - StaffTrack</title>
+
+    <!-- Importações CSS -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" href="materialize/css/materialize.min.css" media="screen,projection"/>
+    <link type="text/css" rel="stylesheet" href="materialize/css/materialize.css" media="screen,projection"/>
+
+    <!-- Custom styles -->
+    <style>
+        body {
+            background-color: #2196f3;
+            color: white;
+        }
+
+        h1 {
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            font-weight: bold;
+            font-size: 2.5rem;
+            margin-top: 50px;
+            animation: floating 3s ease-in-out infinite;
+        }
+
+        .form-container {
+            margin-top: 40px;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            color: #2196f3;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .button-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .btn:hover {
+            background-color: #1e88e5;
+        }
+
+        .input-field label {
+            color: #2196f3;
+        }
+
+        .input-field input {
+            border-bottom: 1px solid #2196f3;
+        }
+
+        .input-field input:focus {
+            border-bottom: 1px solid #1e88e5;
+            box-shadow: 0 1px 0 0 #1e88e5;
+        }
+
+        .btn {
+    display: inline-block;
+    background-color: #2196f3;
+    color: white;
+    /* padding: 10px 20px; */
+    font-size: 1.2rem;
+    cursor: pointer;
+    border-radius: 5px;
+    text-decoration: none;
+}
+
+    </style>
+</head>
+
+<body>
+
+    <h1>Relatórios - StaffTrack</h1>
+
+    <div style="text-align: left; margin-left: 20px; margin-top: -70;">
+        <p>
+            <a class="waves-effect waves-light btn custom-btn-color" href="http://localhost:8080/">
+                <span th:text="Retornar"></span>
+            </a>
+        </p>
+    </div>
+
+    <div class="form-container">
+        <div th:each="mensagem : ${msgPraIterar}">
+            <span th:text="${mensagem}"></span>
+        </div>
+        
+
+        <h5>Relatório de Funcionário Específico</h5>
+        <form th:action="@{/gerarrelatoriofuncionario}" method="POST">
+            <div class="input-field">
+                <label for="idFuncionario">ID do Funcionário</label>
+                <input type="number" id="idFuncionario" name="idFuncionario" required>
+            </div>
+            <div class="button-container">
+                <button type="submit" class="btn">Gerar Relatório</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="form-container">
+        <h5>Relatório Completo</h5>
+        <div class="button-container">
+            <a href="/gerarRelatorioCompleto" class="btn">Gerar Relatório Completo</a>
+        </div>
+    </div>
+
+</body>
+</html>

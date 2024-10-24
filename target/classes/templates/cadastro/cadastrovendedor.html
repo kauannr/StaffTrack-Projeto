@@ -266,6 +266,14 @@ table.striped th {
     transition: background-color .2s ease-out;
     cursor: pointer;
 }
+
+.dropdown-content li>a, .dropdown-content li>span {
+    font-size: 16px;
+    color: #061ce7;
+    display: block;
+    line-height: 22px;
+    padding: 14px 16px;
+}
     </style>
 </head>
 
@@ -281,12 +289,15 @@ table.striped th {
 
 
     
-    <div th:each="mensagem : ${msgPraIterar}">
-        <span th:text="${mensagem}"></span>
-    </div>
+    
     
     <!-- Formulário de cadastro -->
     <div class="container form-container">
+        
+        <div th:each="mensagem : ${msgPraIterar}">
+            <span th:text="${mensagem}"></span>
+        </div>
+
         <!-- Dropdown Trigger -->
         <div style="text-align: right; padding: 10px; position: relative; top: -140px;">
            <a class='dropdown-trigger btn-floating btn-large blue-text' href='#' data-target='dropdown1'>
@@ -296,11 +307,6 @@ table.striped th {
     
        <!-- Dropdown Structure -->
        <ul id='dropdown1' class='dropdown-content'>
-           <li><a href="#!">one</a></li>
-           <li><a href="#!">two</a></li>
-           <li class="divider" tabindex="-1"></li>
-           <li><a href="#!">three</a></li>
-           <li><a href="#!"><i class="material-icons">settings</i>Opções</a></li>
            <li><a href="/logout"><i class="material-icons">logout</i>Logout</a></li>
        </ul>
        
@@ -444,7 +450,7 @@ table.striped th {
         <br />
         <br />
 
-        <div class="row"></div>
+        <div class="row">
             <form action="pesquisar" method="get" th:object="${objVendedor}"
                 class="col s12">
                 <div class="row">
@@ -467,6 +473,7 @@ table.striped th {
                     </div>
                 </div>
             </form>
+        </div>
         </div>
 
         <table class="striped">
@@ -513,7 +520,15 @@ table.striped th {
         <script type="text/javascript"
             src="/materialize/js/materialize.js"></script>
 
-
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+             var elems = document.querySelectorAll('.dropdown-trigger');
+             var instances = M.Dropdown.init(elems, {
+                 alignment: 'right', // Alinha o dropdown com o botão à direita
+                 coverTrigger: false // Evita que o dropdown cubra o botão
+             });
+         });
+               </script>
 
       <script>
        document.addEventListener('DOMContentLoaded', function() {

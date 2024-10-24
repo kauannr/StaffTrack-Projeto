@@ -23,5 +23,7 @@ public interface VendasRepository extends JpaRepository<Vendas, Long> {
 
     Page<Vendas> findAllByVendedorAndDataVendaBetween(Vendedor vendedor, Date de, Date ate, Pageable pageable);
 
+    public List<Vendas> findByDataVenda(Date dataVenda);
+
 
 }

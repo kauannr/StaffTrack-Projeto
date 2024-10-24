@@ -16,14 +16,13 @@ public class OperadorCaixa extends Pessoa {
     private List<Vendas> listaVendas = new ArrayList<>();
 
     @OneToMany(mappedBy = "operador", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<OperacaoDiaria> listaOperacoesDiarias = new ArrayList<>();  // Relacionamento com OperacaoDiaria
+    private List<OperacaoDiaria> listaOperacoesDiarias = new ArrayList<>(); // Relacionamento com OperacaoDiaria
 
-
-    public OperadorCaixa(){
+    public OperadorCaixa() {
 
     }
 
-    public String registrarVenda(Vendas venda){
+    public String registrarVenda(Vendas venda) {
         listaVendas.add(venda);
         return null;
     }

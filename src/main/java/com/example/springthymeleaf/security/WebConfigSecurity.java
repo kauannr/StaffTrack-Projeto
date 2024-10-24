@@ -29,11 +29,10 @@ public class WebConfigSecurity {
         http.csrf()
                 .disable()
                 .authorizeHttpRequests()
-                .requestMatchers(HttpMethod.GET, "/").permitAll() // Permite acesso público à página inicial
-                .requestMatchers("/materialize/**").permitAll()
-                .requestMatchers("/telefones/{idPessoa}").hasAnyRole("MANAGER")
-                .anyRequest().authenticated()
-                .and().formLogin().permitAll()
+                .requestMatchers(HttpMethod.GET, "/materialize/**").permitAll() // Permite acesso público a recursos estáticos
+                .requestMatchers("/telefones/{idPessoa}").hasAnyRole("MANAGER") // Permissão para acessar rota específica
+                .anyRequest().authenticated() // Exige autenticação para qualquer outra requisição
+                .and().formLogin().permitAll() // Permite acesso à página de login
                 .and().logout()
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                 .and()
@@ -47,5 +46,4 @@ public class WebConfigSecurity {
     public void config(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(implemUserDetailsService).passwordEncoder(new BCryptPasswordEncoder());
     }
-
 }

@@ -121,14 +121,13 @@
 
                     <p>Data de Início: 
                         <span th:if="${objContrato.dataInicio != null}" 
-                              th:text="${#dates.format(objContrato.dataInicio, 'dd/MM/yyyy')}"></span>
+                              th:text="${#temporals.format(objContrato.dataInicio, 'dd/MM/yyyy')}"></span>
                         <span th:if="${objContrato.dataInicio == null}">Não informada</span>
                     </p>
-                    
                     <p>Data de Fim: 
-                        <span th:if="${objContrato.dataFim != null}" 
-                              th:text="${#dates.format(objContrato.dataFim, 'dd/MM/yyyy')}"></span>
-                        <span th:if="${objContrato.dataFim == null}">Não informada</span>
+                    <span th:if="${objContrato.dataFim != null}" 
+                        th:text="${#temporals.format(objContrato.dataFim, 'dd/MM/yyyy')}"></span>
+                    <span th:if="${objContrato.dataFim == null}">Não informada</span>
                     </p>
                 </div>
             </div>

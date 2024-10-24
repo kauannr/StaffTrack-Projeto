@@ -214,10 +214,10 @@
     font-weight: bold;
     color: #2196f3;
     padding: 0 10px;
-    background-color: white; /* Isso garante que o legend tenha fundo branco */
-    position: relative;
-    top: 25px; /* Ajuste para mover o legend para cima */
-    margin-left: 15px; /* Ajuste lateral para alinhar corretamente */
+    /* background-color: white; */
+    /* position: relative; */
+    top: 25px;
+    margin-left: 15px;
 }
 
     
@@ -266,6 +266,14 @@ table.striped th {
     transition: background-color .2s ease-out;
     cursor: pointer;
 }
+
+.dropdown-content li>a, .dropdown-content li>span {
+    font-size: 16px;
+    color: #061ce7;
+    display: block;
+    line-height: 22px;
+    padding: 14px 16px;
+}
     </style>
 </head>
 
@@ -281,12 +289,15 @@ table.striped th {
 
 
     
-    <div th:each="mensagem : ${msgPraIterar}">
-        <span th:text="${mensagem}"></span>
-    </div>
+    
     
     <!-- Formulário de cadastro -->
     <div class="container form-container">
+
+        <div th:each="mensagem : ${msgPraIterar}">
+            <span th:text="${mensagem}"></span>
+        </div>
+        
         <!-- Dropdown Trigger -->
         <div style="text-align: right; padding: 10px; position: relative; top: -140px;">
            <a class='dropdown-trigger btn-floating btn-large blue-text' href='#' data-target='dropdown1'>
@@ -296,13 +307,8 @@ table.striped th {
     
        <!-- Dropdown Structure -->
        <ul id='dropdown1' class='dropdown-content'>
-           <li><a href="#!">one</a></li>
-           <li><a href="#!">two</a></li>
-           <li class="divider" tabindex="-1"></li>
-           <li><a href="#!">three</a></li>
-           <li><a href="#!"><i class="material-icons">settings</i>Opções</a></li>
-           <li><a href="/logout"><i class="material-icons">logout</i>Logout</a></li>
-       </ul>
+        <li><a href="/logout"><i class="material-icons">logout</i>Logout</a></li>
+    </ul>
        
         <form th:action="@{/motorista}" id="formmotorista" method="post" th:object="${objMotorista}" enctype="multipart/form-data">
             <div class="row">
@@ -400,65 +406,80 @@ table.striped th {
                     </select>
                 </div>
             
-            <!-- Campos do contrato -->
-            <div class="input-field col s6">
-                <label for="contrato.numeroContrato" class="active">Número do Contrato</label>
-                <input placeholder="Informe o número do contrato" name="contrato.numeroContrato" th:field="*{contrato.numeroContrato}" class="validate">
-            </div>
-
-            <div class="input-field col s6">
-                <label for="contrato.tipo" class="active">Tipo de Contrato</label>
-                <input placeholder="Informe o tipo de contrato" name="contrato.tipo" th:field="*{contrato.tipo}" class="validate">
-            </div>
-
-            <div class="input-field col s6">
-                <label for="contrato.valor" class="active">Valor do Contrato</label>
-                <input placeholder="Informe o valor do contrato" name="contrato.valor" th:field="*{contrato.valor}" class="validate">
-            </div>
-
-            <div class="input-field col s6">
-                <label for="contrato.dataInicio" class="active">Data de Início</label>
-                <input type="date" name="contrato.dataInicio" th:field="*{contrato.dataInicio}" class="validate">
-            </div>
-
-            <div class="input-field col s6">
-                <label for="contrato.dataFim" class="active">Data de Fim</label>
-                <input type="date" name="contrato.dataFim" th:field="*{contrato.dataFim}" class="validate">
-            </div>
-        </div>
-
-
-            <div class="button-container">
-                <button type="submit" class="waves-effect waves-light btn">
-                    <i class="material-icons left">save</i>Salvar
-                </button>
-            </div>
+           
+            <!-- Campos do contrato (ficam inativos em modo de atualização)-->
+             <!-- Campo oculto para o ID do Contrato -->
+             <div class="row">
+                <input type="hidden" name="contrato.id" th:field="*{contrato.id}" />
+                <div class="input-field col s6">
+                    <label for="contrato.numeroContrato" class="active">Número do Contrato</label>
+                    <input placeholder="Informe o número do contrato" name="contrato.numeroContrato" th:field="*{contrato.numeroContrato}" class="validate"
+                        th:disabled="${editMode}">
+                </div>
+    
+                <div class="input-field col s6">
+                    <label for="contrato.tipo" class="active">Tipo de Contrato</label>
+                    <input placeholder="Informe o tipo de contrato" name="contrato.tipo" th:field="*{contrato.tipo}" class="validate"
+                        th:disabled="${editMode}">
+                </div>
+    
+                <div class="input-field col s6">
+                    <label for="contrato.valor" class="active">Valor do Contrato</label>
+                    <input placeholder="Informe o valor do contrato" name="contrato.valor" th:field="*{contrato.valor}" class="validate"
+                        th:disabled="${editMode}">
+                </div>
+    
+                <div class="input-field col s6">
+                    <label for="contrato.dataInicio" class="active">Data de Início</label>
+                    <input type="date" name="contrato.dataInicio" th:field="*{contrato.dataInicio}" class="validate"
+                        th:disabled="${editMode}">
+                </div>
+    
+                <div class="input-field col s6">
+                    <label for="contrato.dataFim" class="active">Data de Fim</label>
+                    <input type="date" name="contrato.dataFim" th:field="*{contrato.dataFim}" class="validate"
+                        th:disabled="${editMode}">
+                </div>
+           </div>
+   
+   
+               <div class="button-container">
+                   <button type="submit" class="waves-effect waves-light btn">
+                       <i class="material-icons left">save</i>Salvar
+                   </button>
+               </div>
         </form>
     </div>
         <br />
         <br />
 
-        <div class="row"></div>
-            <form action="pesquisar" method="get" th:object="${objMotorista}"
+        <div class="row">
+            <form action="pesquisarmotorista" method="get" th:object="${objMotorista}"
                 class="col s12">
                 <div class="row">
                     <div class="input-field col s12">
                         <fieldset class="search-fieldset">
                             <legend>Campo de pesquisa</legend>
                         <label for="nomePesquisa" class="active">Pesquisar</label>
-                        <input placeholder="Nome, sobrenome, sexo ou..." type="text" input name="nome" id="nomePesquisa"
+                        
+                        <input placeholder="Id" type="number" input name="idPesquisa" id="idPesquisa"
+                        class="validade" th:value="${idPesquisa}">
+
+                        <input placeholder="nome ou" type="text" input name="nomePesquisa" id="nomePesquisa"
                         class="validade" th:value="${nomePesquisa}">
 
-                        <input placeholder="Idade da pessoa" type="number" input name="idade" id="idadePesquisa"
-                        class="validade" th:value="${idadePesquisa}">
-                        </fieldset></br>
+                        <input placeholder="sobrenome" type="text" input name="sobrenomePesquisa" id="sobrenomePesquisa"
+                        class="validade" th:value="${sobrenomePesquisa}">
 
+                        </fieldset></br>
+                        
                         <input class="waves-effect waves-light btn"
                             type="submit" value="Buscar">
                     </div>
                 </div>
             </form>
         </div>
+    </div>
 
         <table class="striped">
             <thead>
@@ -474,7 +495,7 @@ table.striped th {
             </thead>
             <tr th:each="pessoa : ${listaPessoasFront.content}">
                 <td th:text="${pessoa.id}"></td>
-                <td> <a th:href="@{/infovendedor/{idPessoa}( idPessoa = ${pessoa.id})}" > <span th:text="${pessoa.nome}"></span></a></td>
+                <td> <a th:href="@{/infomotorista/{idPessoa}( idPessoa = ${pessoa.id})}" > <span th:text="${pessoa.nome}"></span></a></td>
                 <td th:text="${pessoa.sobrenome}"></td>
                 <td th:text="${pessoa.dataNascimento}"></td>
                 <td th:text="${pessoa.cnh.categoriaCNH}"></td>

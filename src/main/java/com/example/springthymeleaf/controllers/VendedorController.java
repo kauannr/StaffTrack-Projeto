@@ -83,8 +83,8 @@ public class VendedorController {
             vendedor.setContrato(contrato.get());
         }
 
-        if(vendedor.getGerente().getId()==null){
-             modelAndView.addObject("msgPraIterar", "Selecione o gerente do funcionário");
+        if (vendedor.getGerente().getId() == null) {
+            modelAndView.addObject("msgPraIterar", "Selecione o gerente do funcionário");
             modelAndView.addObject("objVendedor", vendedor);
             modelAndView.addObject("gerentes", gerenteVendasService.findAll());
             modelAndView.addObject("listaPessoasFront",
@@ -93,7 +93,7 @@ public class VendedorController {
         }
         Optional<GerenteVendas> gerente = gerenteVendasService.findById(vendedor.getGerente().getId());
         vendedor.setGerente(gerente.get());
-        //adicionarNaLista
+        // adicionarNaLista
 
         if (!Pessoa.validarCPF(vendedor.getCpf())) {
             modelAndView.addObject("msgPraIterar", "CPF inválido");
@@ -144,7 +144,7 @@ public class VendedorController {
         modelAndView.addObject("gerentes", gerenteVendasService.findAll());
 
         modelAndView.addObject("objVendedor", vendedor.get());
-        modelAndView.addObject("editMode", false);
+        modelAndView.addObject("editMode", true);
 
         return modelAndView;
     }
@@ -272,6 +272,7 @@ public class VendedorController {
             ModelAndView modelAndView) {
 
         modelAndView.setViewName("contrato/contratovendedor.html");
+        Optional<Vendedor> vendedor = vendedorService.findById(idPessoa);
 
         if (bindingResult.hasErrors()) {
             List<String> msgErros = new ArrayList<>();
@@ -280,10 +281,12 @@ public class VendedorController {
             }
             modelAndView.addObject("msgPraIterar", msgErros);
             modelAndView.addObject("objContrato", contrato);
+            modelAndView.addObject("objBeneficio", new Beneficio());
+            modelAndView.addObject("objVendedor", vendedor.get());
             return modelAndView;
         }
 
-        Optional<Vendedor> vendedor = vendedorService.findById(idPessoa);
+        
 
         vendedor.get().getContrato().setDataFim(contrato.getDataFim());
         vendedor.get().getContrato().setDataInicio(contrato.getDataInicio());
@@ -370,7 +373,7 @@ public class VendedorController {
 
         redirectAttributes.addFlashAttribute("msgPraIterar", "Status do benefício atualizado com sucesso!");
 
-        modelAndView.setViewName("redirect:/exibirbeneficiosgerente/" + beneficio.getContrato().getPessoa().getId());
+        modelAndView.setViewName("redirect:/exibirbeneficiosvendedor/" + beneficio.getContrato().getPessoa().getId());
 
         return modelAndView;
     }
@@ -439,14 +442,17 @@ public class VendedorController {
 
         modelAndView.setViewName("vendas/vendasvendedor.html");
         Optional<Vendedor> vendedor = vendedorService.findById(idPessoa);
-        Page<Vendas> listaVendas;
+        Page<Vendas> listaVendas = null;
 
         if (idVenda != null) {
-            listaVendas = new PageImpl<>(Collections.singletonList(vendasService.findById(idVenda).get()));
+            if (vendasService.isvendaPertenceAoVendedor(idVenda, vendedor.get())) {
+                listaVendas = new PageImpl<>(Collections.singletonList(vendasService.findById(idVenda).get()));
+            }
         } else if (valorVenda != null) {
             listaVendas = vendasService.findByValorVendaAndVendedor(valorVenda, vendedor.get(),
                     PageRequest.of(page, size));
-        } else {
+        }
+        if (listaVendas == null || !listaVendas.hasContent()) {
             listaVendas = vendasService.findAll(PageRequest.of(page, size, Sort.by("id")));
         }
 
@@ -469,11 +475,15 @@ public class VendedorController {
 
         Pageable pageable = PageRequest.of(page, size, Sort.by("id"));
         Page<Vendas> listaVendas = vendasService.vendasNoPeriodo(vendedor.get(), de, ate, pageable);
+        if (!listaVendas.hasContent()) {
+            modelAndView.addObject("msgPraIterar", "Sem vendas no período especificado");
+            listaVendas = vendasService.findAll(pageable);
+        }
 
         modelAndView.addObject("listaVendas", listaVendas);
         modelAndView.addObject("objVenda", new Vendas());
         modelAndView.addObject("objVendedor", vendedor.get());
-
+        
         return modelAndView;
     }
 

@@ -270,7 +270,13 @@ table.striped th {
     }
     
     
-
+    .dropdown-content li>a, .dropdown-content li>span {
+    font-size: 16px;
+    color: #061ce7;
+    display: block;
+    line-height: 22px;
+    padding: 14px 16px;
+}
         
     </style>
 </head>
@@ -287,12 +293,15 @@ table.striped th {
     </div>
 
     
-    <div th:each="mensagem : ${msgPraIterar}">
-        <span th:text="${mensagem}"></span>
-    </div>
+    
     
     <!-- Formulário de cadastro -->
     <div class="container form-container">
+        
+        <div th:each="mensagem : ${msgPraIterar}">
+            <span th:text="${mensagem}"></span>
+        </div>
+
         <!-- Dropdown Trigger -->
         <div style="text-align: right; padding: 10px; position: relative; top: -140px;">
            <a class='dropdown-trigger btn-floating btn-large blue-text' href='#' data-target='dropdown1'>
@@ -302,13 +311,8 @@ table.striped th {
     
        <!-- Dropdown Structure -->
        <ul id='dropdown1' class='dropdown-content'>
-           <li><a href="#!">one</a></li>
-           <li><a href="#!">two</a></li>
-           <li class="divider" tabindex="-1"></li>
-           <li><a href="#!">three</a></li>
-           <li><a href="#!"><i class="material-icons">settings</i>Opções</a></li>
-           <li><a href="/logout"><i class="material-icons">logout</i>Logout</a></li>
-       </ul>
+        <li><a href="/logout"><i class="material-icons">logout</i>Logout</a></li>
+    </ul>
        
         <form action="gerentevendas" id="formGerente" method="post" th:object="${objGerenteVendas}" enctype="multipart/form-data">
             <div class="row">
@@ -436,19 +440,24 @@ table.striped th {
         <br />
         <br />
 
-        <div class="row"></div>
-            <form action="pesquisar" method="get" th:object="${objGerenteVendas}"
+        <div class="row">
+            <form action="pesquisargerente" method="get" th:object="${objGerenteVendas}"
                 class="col s12">
                 <div class="row">
                     <div class="input-field col s12">
                         <fieldset class="search-fieldset">
                             <legend>Campo de pesquisa</legend>
                         <label for="nomePesquisa" class="active">Pesquisar</label>
-                        <input placeholder="Nome, sobrenome, sexo ou..." type="text" input name="nome" id="nomePesquisa"
+                        
+                        <input placeholder="Id" type="number" input name="idPesquisa" id="idPesquisa"
+                        class="validade" th:value="${idPesquisa}">
+
+                        <input placeholder="nome ou" type="text" input name="nomePesquisa" id="nomePesquisa"
                         class="validade" th:value="${nomePesquisa}">
 
-                        <input placeholder="Id da pessoa" type="number" input name="idade" id="idadePesquisa"
-                        class="validade" th:value="${idadePesquisa}">
+                        <input placeholder="sobrenome" type="text" input name="sobrenomePesquisa" id="sobrenomePesquisa"
+                        class="validade" th:value="${sobrenomePesquisa}">
+
                         </fieldset></br>
                         
                         <input class="waves-effect waves-light btn"
@@ -457,6 +466,7 @@ table.striped th {
                 </div>
             </form>
         </div>
+    </div>
 
         <table class="striped" >
             <thead>
