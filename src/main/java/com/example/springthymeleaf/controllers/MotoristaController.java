@@ -77,7 +77,7 @@ public class MotoristaController {
         modelAndView.setViewName("cadastro/cadastromotorista.html");
         CNH cnh = motorista.getCnh();
         cnh.setMotorista(motorista);
-        cnhService.save(cnh);
+        //cnhService.save(cnh);
 
         if (!Pessoa.validarCPF(motorista.getCpf())) {
             modelAndView.addObject("msgPraIterar", "CPF inválido");
