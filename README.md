@@ -63,7 +63,7 @@ Além disso, os todos os botões superiores são customizados. Isso significa qu
 Esta é apenas a primeira versão do projeto, ainda haverá atualizações e implementações. Tudo será devidamente comitado e documentado neste repositório.
 A aplicação já se encontra hospedada na AWS, porém, pode estar inativa. Caso haja a curiosidade de ver e testar a funcionalidade da aplicação, basta me mandar um email para que eu a coloque no ar
 
-# Tecnologias utilizadas
+# Tecnologias utilizadas:
 ## Back end
 - Java
 - Spring Boot
@@ -80,10 +80,10 @@ A aplicação já se encontra hospedada na AWS, porém, pode estar inativa. Caso
 - Thymeleaf
 
 # Autor
-Kauan Ferreira Rodrigues
-LinkedIn: https://www.linkedin.com/in/kauan-ferreira-922671240/
-Email: kauanfer10@gmail.com
-Contato: 83 981527643
+- Kauan Ferreira Rodrigues
+- LinkedIn: https://www.linkedin.com/in/kauan-ferreira-922671240/
+- Email: kauanfer10@gmail.com
+- Contato: 83 981527643
 
 
 
