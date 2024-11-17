@@ -55,10 +55,35 @@ Além disso, os todos os botões superiores são customizados. Isso significa qu
  ![motorista](https://github.com/kauannr/StaffTrack-Projeto/raw/e5332c028036f6dd5d5ac14d5d364094baf57ce3/assets/Captura%20de%20tela%202024-11-05%20000933.png)
   Aqui encontramos todas as entregas do motorista, cada entrega tem um status, podendo ter sido entregue, cancela ou devolvida. Também temos as informações da entrega como origem, destino e descrição da entrega, e, assim como os benefícios do contrato, não é possivel excluir uma entrega de um motorista. Todas essas informações devem ficar contidas na base de dados
 
-## Email de prevenção:
+# Email de prevenção:
  ![email](https://github.com/kauannr/StaffTrack-Projeto/raw/e5332c028036f6dd5d5ac14d5d364094baf57ce3/assets/Captura%20de%20tela%202024-11-05%20001959.png)
   Aqui temos o email de prevenção enviado pelo sistema ao próprio manager do sistema, esse email é enviado automaticamente através de uma tarefa agendada no backend onde faz a vereficação continua a cada seis meses. Nele contém todos os contratos com expiração e todas as informações de cada vendedor dono do contrato.
 
+# Observações:
+Esta é apenas a primeira versão do projeto, ainda haverá atualizações e implementações. Tudo será devidamente comitado e documentado neste repositório.
+A aplicação já se encontra hospedada na AWS, porém, pode estar inativa. Caso haja a curiosidade de ver e testar a funcionalidade da aplicação, basta me mandar um email para que eu a coloque no ar
+
+# Tecnologias utilizadas
+## Back end
+- Java
+- Spring Boot
+- JPA / Hibernate
+- Junit
+- Banco de dados: PostreSQL, AWS RDS
+- Hospedagem: AWS EC2
+- 
+## Front end
+- HTML
+- CSS
+- JavaScript
+- Jquey
+- Thymeleaf
+
+# Autor
+Kauan Ferreira Rodrigues
+LinkedIn: https://www.linkedin.com/in/kauan-ferreira-922671240/
+Email: kauanfer10@gmail.com
+Contato: 83 981527643
 
 
 
