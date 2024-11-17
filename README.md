@@ -71,7 +71,7 @@ A aplicação já se encontra hospedada na AWS, porém, pode estar inativa. Caso
 - Junit
 - Banco de dados: PostreSQL, AWS RDS
 - Hospedagem: AWS EC2
-- 
+  
 ## Front end
 - HTML
 - CSS
